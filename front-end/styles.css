@@ -1,47 +1,39 @@
 
 
-*,
-*::before,
-*::after {
-    padding: 0;
-    margin: 0;
-    border: 0;
-    box-sizing: border-box;
-}
-a {
-    text-decoration: none;
-}
-ul,ol,li{
-    list-style: none;
-}
-html,body{
-    height: 100%;
-    line-height: 1;
-    font-size: 14px;
-    color: #252b42;
-    background-color: #cdcdcd;
-    font-weight:500;
-    font-family: 'Montserrat';
-}
+/*Обнуління*/
+*{padding: 0;margin: 0;border: 0;}
+*,*:before,*:after{-moz-box-sizing: border-box;-webkit-box-sizing: border-box;box-sizing: border-box;}
+:focus,:active{outline: none;}
+a:focus,a:active{outline: none;}
+nav,footer,header,aside{display: block;}
+html,body{height:100%;width:100%;font-size:100%;line-height:1;-ms-text-size-adjust:100%;-moz-text-size-adjust:100%;-webkit-text-size-adjust:100%;font-family: 'Montserrat';}
+input,button,textarea{font-family:inherit;}
+input::-ms-clear{display: none;}
+button{cursor: pointer;}
+button::-moz-focus-inner{padding:0;border:0;}
+a,a:visited{text-decoration: none;}
+a:hover{text-decoration: none;}
+ul li{list-style: none;}
+img{vertical-align: top;}
+h1,h2,h3,h4,h5,h6{font-weight: 600;}
 .video-background {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height:811px;
+height: 100%;
     object-fit: cover;
     z-index: -1;
   }
 
   
   .wrapper {
-    
 }
 .main__page {
 }
 .button_header{
 padding: 1px 1px 5px 3px;
-
+width: 100%;
     text-align: center;
     border-radius: 1%;
     background-color: blue;
@@ -103,19 +95,21 @@ padding: 10px;
 
 .main__page-text  {
     margin-top: 130px;
-    position: fixed;
+    position: absolute;
 padding-left: 77px;
 font-size: 50px;
 line-height: 99.4px;
     opacity: 0px;
+
     color: white;
     z-index: 2;
     width: 911.92px;
     height: 198px;
-
     gap: 0px;
     opacity: 0px;
-
+}
+.main__page-text{
+  font-weight: 700;
 }
 svg{
     width: 20px;
@@ -130,17 +124,18 @@ padding-left: -10px;
 
 
 .search-bar {
+  width: 100%;
 z-index: 2;
 margin-top: 400px;
 margin-left: 50px;
-position: fixed;
+position: absolute;
     display: flex;
     align-items: center;
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.468);
     border-radius: 30px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    padding: 10px 20px;
-    width: 80%;
+    padding: 5px 20px;
+
     max-width: 900px;
   }
 
@@ -149,8 +144,8 @@ position: fixed;
     display: flex;
     align-items: center;
     flex: 1;
-    padding: 0 10px;
-    border-right: 1px solid #000000;
+    padding: 0 15px;
+
   }
 
   .search-section:last-child {
@@ -178,34 +173,38 @@ position: fixed;
 
   /* Кнопка пошуку */
   .search-button {
-    background-color: #007bff;
-    color: white;
+
+    color: rgb(0, 0, 0);
     border: none;
-margin-left: 3px;
+margin-left: -30px;
     border-radius: 20px;
-    padding: 10px 140px 10px 140px;
+
+
 display: flex;
 justify-content: center;
 align-items: center;
 align-items: center;
     cursor: pointer;
+    padding: 7px 25px 7px 25px;
     font-size: 20px;
     font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+
+    border: 1px solid black;
+
+    backdrop-filter: blur(38.44718551635742px);
 
     transition: background-color 0.3s ease;
   }
 
   .search-button:hover {
-    background-color: #0056b3;
+background-color:rgba(160, 160, 160, 0.801) ;
   }
 
 
   .main_categories {
     z-index: 2;
 margin-top: 500px;
-position: fixed;
+position: absolute;
 background-color: rgba(255, 255, 255, 0.361);
 height: 50px;
 width: 90%;

@@ -38,7 +38,7 @@ width: 100%;
     border-radius: 1%;
     background-color: blue;
     color:white;
-    font-weight: 700;
+    font-weight: 500;
     font-size: 18px;
     transition-duration: 0.9s;
 }
@@ -66,8 +66,9 @@ width: 100%;
 .header__topspot {
     font-weight: 800;
     font-size: 20px;
-    letter-spacing: 0.4px;
+    letter-spacing: 2px;
         text-shadow: 1px 1px 1px  #000;
+        padding-left: 40px;
 }
 .header_list {
     display: flex;
@@ -80,15 +81,17 @@ width: 100%;
     padding-top: 8px;
 }
 .header-ul_element a{
-    font-weight: 700;
+  letter-spacing: 0.9px;
+    font-weight: 500;
     color:white;
  font-size: 18px;
  text-shadow: 0.8px 0.8px 0.2px  #000;
+ text-decoration: 0.8s;
 }
 .header-ul_element:hover a{
 color:rgb(255, 255, 255);
-background-color: rgb(0, 0, 0);
-padding: 10px;
+border-bottom: 2.5px solid black;
+
 }
 
 

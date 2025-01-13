@@ -1,13 +1,14 @@
 const express = require('express')
 const path = require('path')
-
-
+const bcrypt = require('bcrypt')
+const pool = require('./database') 
 
 
 
 class Controller {
 
     pageMain = path.join(__dirname, '../Front-end/index.html') 
+    pageError = path.join(__dirname, '../front-end/error.html')
 
     openMainPage = (req, res)=>{
         try{
@@ -25,6 +26,56 @@ class Controller {
             res.status(500).json({message:"Problem with server or bad request"})
         }
     }
+
+    openErrorPage = (req, res)=>{
+        try{
+            res.sendFile(this.pageError, (err)=>{
+                if(err){
+                    console.log(`Problem with sending Error page: ${err}`)
+                    res.status(400).json({message:"Error page not found or problem with opening"})
+                    return
+                }
+                res.status(200)
+                console.log(`Error page ssuccessful opened`)
+            })
+        }catch(err){
+            console.log(`Problem with server or bad request: ${err}`)
+            res.status(500).json({message:"Problem with server or bad request"})
+        }
+    }
+
+    signUp = async (req, res) =>{
+        const{username, login, password}=req.body
+        const saltLvl=10
+
+        if (!username || !login || !password) {
+            return res.status(400).json({ message: "Username, Login and password are required" });
+        }
+        const existUser = await pool.query(`SELECT * FROM users WHERE login = ($1)`,[login])
+        if(existUser.rowCount>0){
+            return res.status(400).json({message:`User with this email or phone number ${existUser.rows[0].email_address} are already exist, please try another email or phone number`})
+        }
+        try{
+            const hashedPassword = await bcrypt.hash(password, saltLvl)
+            console.log(`Hashed password: ${hashedPassword}`)
+
+            const creatingUser = await pool.query(`INSERT INTO users (username, login, password) VALUES ($1, $2, $3) RETURNING user_id`,[username, login, hashedPassword])
+            if(creatingUser.rowCount===0){
+                console.log(`User have not created`)
+                res.status(400).json({message:"Problem with creating user in Database"})
+                return
+            }
+            res.status(201).json({
+                message:`User ${username} successful created`,
+                user:`User ${username} has new userId in our System: ${creatingUser.rows[0].user_id}`
+            })
+        }catch(err){
+            console.log(`Problem with server`)
+            res.status(500).json({message:"Problem with server"})
+        }
+    }
+
+
 
 }
 

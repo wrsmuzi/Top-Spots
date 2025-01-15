@@ -20,14 +20,16 @@ h1,h2,h3,h4,h5,h6{font-weight: 600;}
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
+    width: 100vw;
 height: 100%;
     object-fit: cover;
     z-index: -1;
+
   }
 
   
   .wrapper {
+    min-width: 100vw;
 }
 .main__page {
 }
@@ -261,30 +263,68 @@ margin-left: 50px;
 
 /* Styles for the registration menu */
 .wrapper_login {
+  margin-top: 100px;
   position: absolute;
   margin-left: 450px;
   z-index: 3;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 400px;
 overflow: hidden;
-
-padding: 20px;
+background-color: rgba(255, 255, 255, 0.447);
+transition: height .2s ease;
+backdrop-filter: blur(10px);
+width: 387px;
+transform: scale(0);
+transition: transform .5s, height .2s ease;
+}
+.wrapper_login.active-popup{
+  transform: scale(1);
+}
+.wrapper_login.active .form-box.login{
+transition: none;
+transform: translateX(-400px);
 }
 
+.wrapper_login .form-box.login{
+transition: transform   .18s ease;
+transform: translateX(0);
+}
+
+.wrapper_login.active .form-box.register{
+transition: transform .18s ease;
+transform: translateX(0);
+}
+
+.wrapper_login.active{
+  height: 480px;
+}
+.wrapper_login.active .icon-close{
+margin-bottom: 440px;
+}
+.wrapper_login .form-box.register{
+  position: absolute;
+  transform: translateX(400px);
+  transition: none;
+  z-index: 3;
+}
+
+
+
 .form-box {
-  background: rgba(255, 255, 255, 0.582);
+
   padding: 30px 40px;
   border-radius: 10px;
-  backdrop-filter: blur(10px);
+
   max-width: 400px;
   width: 100%;
 }
 .wrapper_login .icon-close{
+  cursor: pointer;
   z-index: 2;
-margin-left: 313px;
-margin-bottom: 302px;
+margin-left: 353px;
+margin-bottom: 361px;
 background-color: rgb(0, 0, 0);
 padding-left:10px ;
 padding-top: 2px;
@@ -389,7 +429,7 @@ padding-bottom: 10px;
 
 .login-register {
   text-align: center;
-  margin-top: 20px;
+  margin-top: 10px;
   font-size: 14px;
   color: #555;
 }

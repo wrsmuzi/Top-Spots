@@ -10,6 +10,8 @@ class Controller {
     pageMain = path.join(__dirname, '../Front-end/index.html') 
     pageError = path.join(__dirname, '../front-end/error.html')
 
+
+    //Open Main page
     openMainPage = (req, res)=>{
         try{
             res.sendFile(this.pageMain,(err)=>{
@@ -19,7 +21,7 @@ class Controller {
                     return
                 }
                 res.status(200)
-                console.log(`Main page successful opened`)
+                console.log(`Main page successfully opened`)
             })
         }catch(err){
             console.log(`Problem with server or bad request: ${err}`)
@@ -27,6 +29,7 @@ class Controller {
         }
     }
 
+    //Open Error page
     openErrorPage = (req, res)=>{
         try{
             res.sendFile(this.pageError, (err)=>{
@@ -44,6 +47,8 @@ class Controller {
         }
     }
 
+
+    //Registration
     signUp = async (req, res) =>{
         const{username, login, password}=req.body
         const saltLvl=10
@@ -66,7 +71,7 @@ class Controller {
                 return
             }
             res.status(201).json({
-                message:`User ${username} successful created`,
+                message:`User ${username} successfully created`,
                 user:`User ${username} has new userId in our System: ${creatingUser.rows[0].user_id}`
             })
         }catch(err){
@@ -74,6 +79,35 @@ class Controller {
             res.status(500).json({message:"Problem with server"})
         }
     }
+
+    //Log in 
+    logIn = async (req, res)=>{
+        const{login, password}=req.body
+        if(!login || !password){
+            console.log(`User have not entered login or password`)
+            return res.status(400).json({message:"Login and Password are required"})
+        }
+        try{
+            const dataBaseUserInf = await pool.query(`SELECT * FROM users WHERE login = ($1)`,[login])
+            if(dataBaseUserInf.rowCount===0){
+                console.log(`User with this login ${login} is not exist`)
+                return res.status(404).json({message:`We do not have user with this login: ${login}`})
+            }
+            const user = dataBaseUserInf.rows[0]
+            const IsMatchPassword = await bcrypt.compare(password, user.password)
+            if(!IsMatchPassword){
+                console.log(`User have entered wrong password`)
+                return res.status(401).json({message:`User have entered wrong password`})
+            }
+            console.log(`User with this login ${login} successfully logged in`)
+            res.status(200).json({message:`User successfully logged in`})
+
+        }catch(err){
+            console.log(`Problem with server, cause: ${err}`)
+            res.status(500).json({message:"Problem with server"})
+        }
+    }
+
 
 
 

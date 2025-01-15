@@ -6,6 +6,7 @@ const controller = new Controller()
 
 router.get('/', controller.openMainPage)
 router.post('/api/registration', controller.signUp)
+router.post('/api/logIn',controller.logIn)
 
 
 

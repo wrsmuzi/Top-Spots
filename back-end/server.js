@@ -5,6 +5,8 @@ const router = require('./router.js')
 
 app.use(express.static(path.join(__dirname, '../Front-end')));
 app.use(express.json())
+const cors = require('cors');
+app.use(cors());
 app.use('/', router);
 
 

@@ -25,13 +25,17 @@
 
     <button  class="button_header " id="SignUp"><li class="header-ul_elementer ">Login</li></button>
 </ul></div>
+
+
+
+<!------------------------Log In-------------------------------------------------->
 <div class="wrapper_login">
     <span class="icon-close">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>
     </span>
     <div class="form-box login">
         <h2>Login</h2>
-        <form action="#">
+        <form id="logIn_form">
             <div class="input-box">
      
                 <span class="icon">
@@ -39,14 +43,14 @@
 <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 
 9.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z"/></svg>
                 </span>
-                <input type="name" placeholder="Username" required >
+                <input type="text" placeholder="Email or Phone" name="login" required >
 
             </div>
             <div class="input-box">
                 <span class="icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48L48 64zM0 176L0 384c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-208L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/></svg>
                 </span>
-                <input type="email"  placeholder="Email" required>
+                <input type="text"  placeholder="Password" name="password" required>
 
             </div>
            <!--
@@ -76,7 +80,7 @@
                 Remember me</label>
                 <a href="">Forgot Password?</a>
             </div>
-<button class="btn" type="submit">Login</button>
+<button class="btn" type="submit" id="login_btn">Login</button>
 <div class="login-register">
     <p>Haven`t an account?<a href="#" class="register-link">Register</a></p>
 </div>
@@ -89,11 +93,11 @@
 
 
 
-
+<!------------------------Sign Up-------------------------------------------------->
 
     <div class="form-box register">
         <h2>Registration</h2>
-        <form action="#">
+        <form action="">
             <div class="input-box">
      
                 <span class="icon">
@@ -185,8 +189,7 @@ C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-2
 
     <!--   -----    ------ ------  Скріпти для ссс та хтмл стилей ---- ---- ---- -->
 <script>
-
-const wrapper = document.querySelector('.wrapper_login')
+    const wrapper = document.querySelector('.wrapper_login')
 const registerLink = document.querySelector('.register-link')
 const loginLink = document.querySelector('.login-link')
 const btn = document.querySelector('.button_header ')
@@ -205,8 +208,11 @@ registerLink.addEventListener("click",()=> {
 loginLink.addEventListener("click",()=> {
     wrapper.classList.remove('active');
 })
+
+
 </script>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script type="module" src="./front.js"></script>
   
 </body>
 </html>

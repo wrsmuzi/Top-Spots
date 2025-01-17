@@ -107,10 +107,6 @@ class Controller {
             res.status(500).json({message:"Problem with server"})
         }
     }
-
-
-
-
 }
 
 module.exports = Controller

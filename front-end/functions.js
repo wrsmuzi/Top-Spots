@@ -6,21 +6,20 @@
             console.log(`Status controller have not status receive`)
             return
         }
+        const loginAnswer = document.querySelector('.login_answer')
         switch(status) {
-            case 200:
-                console.log(`User is logged in YEAAAAAAAAAH`)
-                break
-            case 400:
-                break
+            case 200: 
+                loginAnswer.innerHTML=`<h1 class="login_answer_text">You have successfully logged in</h1>`
+                break;
             case 401:
-                break
-            case 404:
-                break
+                loginAnswer.innerHTML=`<h1 class="login_answer_text">Wrong login or password</h1>`
+                break;
             case 429:
-                 break
+                loginAnswer.innerHTML=`<h1 class="login_answer_text">Too many requests, please try again later</h1>`
+                 break;
             default:
-                break
-
+                loginAnswer.innerHTML=`<h1 class="login_answer_text">An error occurred, we are working on it</h1>`
+                break;
         }
     }
 

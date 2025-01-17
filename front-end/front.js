@@ -20,10 +20,10 @@ loginBtn.addEventListener('click', async (event)=>{
     
 
     const {login, password}=inputValues
-    if(!login?.trim()==="" || !password.trim()===""){
-        console.log(`User have not entered login or password`)
-        //Треба блок для html
-        return
+    if(!login?.trim() || !password.trim()){
+        const loginAnswer = document.querySelector('.login_answer')
+        return loginAnswer.innerHTML=`<h1 class="login_answer_text">Login and password are required</h1>`
+        
     }
     else{
         console.log(`Front.js opened`)

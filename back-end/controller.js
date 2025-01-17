@@ -85,26 +85,26 @@ class Controller {
         const{login, password}=req.body
         if(!login || !password){
             console.log(`User have not entered login or password`)
-            return res.status(400).json({message:"Login and Password are required"})
+            return res.status(400).json()
         }
         try{
             const dataBaseUserInf = await pool.query(`SELECT * FROM users WHERE login = ($1)`,[login])
             if(dataBaseUserInf.rowCount===0){
                 console.log(`User with this login ${login} is not exist`)
-                return res.status(404).json({message:`We do not have user with this login: ${login}`})
+                return res.status(401).json()
             }
             const user = dataBaseUserInf.rows[0]
             const IsMatchPassword = await bcrypt.compare(password, user.password)
             if(!IsMatchPassword){
                 console.log(`User have entered wrong password`)
-                return res.status(401).json({message:`User have entered wrong password`})
+                return res.status(401).json()
             }
             console.log(`User with this login ${login} successfully logged in`)
-            res.status(200).json({message:`User successfully logged in`})
+            return res.status(200).json()
 
         }catch(err){
             console.log(`Problem with server, cause: ${err}`)
-            res.status(500).json({message:"Problem with server"})
+            return res.status(500).json()
         }
     }
 }

@@ -15,8 +15,8 @@
 <div class="main__page">
 <div class="main__header">
 <div class="header__topspot">
-    <div  class="logo_img_header">
-        <video class="logo_img" autoplay muted playsinline noloop >
+    <div  class="logo_video_header">
+        <video class="logo_video" height="auto" autoplay muted playsinline noloop >
             <source src="./img/output_video1.webm" type="video/webm" >
             Logo don't opened
           </video>
@@ -40,55 +40,40 @@
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>
     </span>
     <div class="form-box login">
-        <h2>Login</h2>
+
+
+        <div  class="logo_video_header video-registr-login">
+        <img src="img/Top Spots (3).png" width="280px" height="280px" alt="">
+              <!-- <img src="./img/TopSpots2-ezgif.com-animated-gif-maker (1).gif" alt="GIF" class="logo_img"> -->
+        </div>
+
+        <h2>Log In</h2>
         <form id="logIn_form">
             <div class="input-box">
      
                 <span class="icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-<path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 
-9.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z"/></svg>
+                        <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 
+                        9.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z"/></svg>
                 </span>
                 <input type="text" placeholder="Email or Phone" name="login" required >
 
             </div>
             <div class="input-box">
                 <span class="icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48L48 64zM0 176L0 384c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-208L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M144 144l0 48 160 0 0-48c0-44.2-35.8-80-80-80s-80 35.8-80 80zM80 192l0-48C80 64.5 144.5 0 224 0s144 64.5 144 144l0 48 16 0c35.3 0 64 28.7 64 64l0 192c0 35.3-28.7 64-64 64L64 512c-35.3 0-64-28.7-64-64L0 256c0-35.3 28.7-64 64-64l16 0z"/></svg>
                 </span>
                 <input type="text"  placeholder="Password" name="password" required>
 
             </div>
-           <!--
-             <div class="input-box">
-                <span class="icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"> 
-<path d="M144 144l0 48 160 0 0-48c0-44.2-35.8-80-80-80s-80 35.8-80 80zM80 192l0-48C80 64.5 144.5 0 224 0s1
-44 64.5 144 144l0 48 16 0c35.3 0 64 28.7 64 64l0 192c0 35.3-28.7 64-64 64L64 512c-35.3 0-64-28.7-64-64L0 256c0
--35.3 28.7-64 64-64l16 0z"/></svg>
-                </span>
-                <input type="password" placeholder="Type your password" required>
-
-            </div>
-            <div class="input-box">
-                <span class="icon">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-<path d="M280 0C408.1 0 512 103.9 512 232c0 13.3-10.7 24-24 24s-24-10.7-24-24c0-101.6-82.4-184-184-184c-13.
-3 0-24-10.7-24-24s10.7-24 24-24zm8 192a32 32 0 1 1 0 64 32 32 0 1 1 0-64zm-32-72c0-13.3 10.7-24 24-24c75.1 0 1
-36 60.9 136 136c0 13.3-10.7 24-24 24s-24-10.7-24-24c0-48.6-39.4-88-88-88c-13.3 0-24-10.7-24-24zM117.5 1.4c19.4-5.3 39.7 4.6 47.4 23.2l40 96c6.8 16.3 2.1 35.2-11.6 46.3L144 207.3c33.3 70.4 90.3 127.4 160.7 160.7L345 318.7c11.2-13.7 30-18.4 46.3-11.6l96 40c18.6 7.7 28.5 28 23.2 47.4l-24 88C481.8 499.9 466 512 448 512C200.6 512 0 311.4 0 64C0 46 12.1 30.2 29.5 25.4l88-24z"/></svg>
-                </span>
-                <input type="number" placeholder="phone number" required>
-
-            </div>
-           -->
            <div class="login_answer"></div>
             <div class="remember-forgot">
-                <label ><input type="checkbox">
+                <label ><input class="darkMode" type="checkbox">
                 Remember me</label>
                 <a href="">Forgot Password?</a>
             </div>
             
-<button class="btn" type="submit" id="login_btn">Login</button>
+<button class="btn btn-log" type="submit">Log In</button>
 <div class="login-register">
     <p>Haven`t an account?<a href="#" class="register-link">Register</a></p>
 </div>
@@ -104,8 +89,12 @@
 <!------------------------Sign Up-------------------------------------------------->
 
     <div class="form-box register">
-        <h2>Registration</h2>
+        <div  class="logo_video_header video-registr-login video-reg">
+            <img  class="logo-video"  src="img/Top Spots (3).png" width="280px" height="280px" alt="">
+            </div>
+        <h2>Sign Up</h2>
         <form id="form_signUp">
+
             <div class="input-box">
      
                 <span class="icon">
@@ -118,7 +107,7 @@
             </div>
             <div class="input-box">
                 <span class="icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48L48 64zM0 176L0 384c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-208L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48L48 64zM0 176L0 384c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-208L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/></svg>
                 </span>
                 <input type="text"  placeholder="Phone or Email" name="login" required>
             </div>
@@ -134,14 +123,14 @@
             <div class="signup_answer"></div>
    
             <div class="remember-forgot">
-                <label ><input type="checkbox">
+                <label ><input class="darkMode" type="checkbox">
             I agree to the terms & condition</label>
 
             </div>
 
-<button class="btn" type="submit">Register</button>
+<button class="btn" type="submit">Sign Up</button>
 <div class="login-register">
-    <p> Already have an account?<a href="#" class="login-link">Login</a></p>
+    <p> Already have an account?<a href="#" class="login-link">Log In</a></p>
 </div>
         </form>
     </div>
@@ -204,6 +193,21 @@ const registerLink = document.querySelector('.register-link')
 const loginLink = document.querySelector('.login-link')
 const btn = document.querySelector('.button_header ')
 const iconClose = document.querySelector('.icon-close')
+const darkmode =document.querySelector(".darkMode")
+
+darkmode.addEventListener("click", ()=>{
+darkmode.classList.add('active')
+});
+
+
+document.querySelectorAll('.icon-close').forEach(iconClose => {
+    iconClose.addEventListener('click', () => {
+        wrapper.classList.remove('active-popup');
+    });
+});
+
+
+
 btn.addEventListener('click',()=>{
     wrapper.classList.add('active-popup')
 })

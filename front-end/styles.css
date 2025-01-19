@@ -456,11 +456,11 @@ font-size: 35px;
 .btn:hover {
   background: linear-gradient(135deg, #2575fc, #6a11cb);
 }
-.btn:focus{
+.btn:active{
   background: linear-gradient(130deg, #0a2047, #290550);
   
 }
-.btn-log:focus{
+.btn-log:active{
   background: linear-gradient(130deg, #0a2047, #290550);
 }
 .login-register {

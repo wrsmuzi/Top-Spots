@@ -17,7 +17,7 @@ class Controller {
             res.sendFile(this.pageMain,(err)=>{
                 if(err){
                     console.log(`Problem with sending Main page: ${err}`)
-                    res.status(404).json({message:"Main page not found or problem with opening"})
+                    res.status(404).json()
                     return
                 }
                 res.status(200)
@@ -25,7 +25,7 @@ class Controller {
             })
         }catch(err){
             console.log(`Problem with server or bad request: ${err}`)
-            res.status(500).json({message:"Problem with server or bad request"})
+            res.status(500).json()
         }
     }
 
@@ -35,7 +35,7 @@ class Controller {
             res.sendFile(this.pageError, (err)=>{
                 if(err){
                     console.log(`Problem with sending Error page: ${err}`)
-                    res.status(400).json({message:"Error page not found or problem with opening"})
+                    res.status(400).json()
                     return
                 }
                 res.status(200)
@@ -43,7 +43,7 @@ class Controller {
             })
         }catch(err){
             console.log(`Problem with server or bad request: ${err}`)
-            res.status(500).json({message:"Problem with server or bad request"})
+            res.status(500).json()
         }
     }
 
@@ -54,11 +54,13 @@ class Controller {
         const saltLvl=10
 
         if (!username || !login || !password) {
-            return res.status(400).json({ message: "Username, Login and password are required" });
+            console.log(`Username, Login and password are required`)
+            return res.status(400).json();
         }
         const existUser = await pool.query(`SELECT * FROM users WHERE login = ($1)`,[login])
         if(existUser.rowCount>0){
-            return res.status(400).json({message:`User with this email or phone number ${existUser.rows[0].email_address} are already exist, please try another email or phone number`})
+            console.log(`User with this email or phone number ${existUser.rows[0].email_address} are already exist,`)
+            return res.status(409).json()
         }
         try{
             const hashedPassword = await bcrypt.hash(password, saltLvl)
@@ -66,17 +68,14 @@ class Controller {
 
             const creatingUser = await pool.query(`INSERT INTO users (username, login, password) VALUES ($1, $2, $3) RETURNING user_id`,[username, login, hashedPassword])
             if(creatingUser.rowCount===0){
-                console.log(`User have not created`)
-                res.status(400).json({message:"Problem with creating user in Database"})
+                console.log(`Problem with creating user in Database`)
+                res.status(400).json()
                 return
             }
-            res.status(201).json({
-                message:`User ${username} successfully created`,
-                user:`User ${username} has new userId in our System: ${creatingUser.rows[0].user_id}`
-            })
+            res.status(201).json()
         }catch(err){
             console.log(`Problem with server`)
-            res.status(500).json({message:"Problem with server"})
+            res.status(500).json()
         }
     }
 

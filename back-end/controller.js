@@ -9,6 +9,7 @@ class Controller {
 
     pageMain = path.join(__dirname, '../Front-end/index.html') 
     pageError = path.join(__dirname, '../front-end/error.html')
+    pageAuth = path.join(__dirname, '../front-end/authentication.html')
 
 
     //Open Main page
@@ -17,11 +18,10 @@ class Controller {
             res.sendFile(this.pageMain,(err)=>{
                 if(err){
                     console.log(`Problem with sending Main page: ${err}`)
-                    res.status(404).json()
-                    return
+                    return res.status(404).json()
                 }
-                res.status(200)
                 console.log(`Main page successfully opened`)
+                res.status(200)      
             })
         }catch(err){
             console.log(`Problem with server or bad request: ${err}`)
@@ -35,11 +35,26 @@ class Controller {
             res.sendFile(this.pageError, (err)=>{
                 if(err){
                     console.log(`Problem with sending Error page: ${err}`)
-                    res.status(400).json()
-                    return
+                    return res.status(400).json()           
                 }
-                res.status(200)
                 console.log(`Error page ssuccessful opened`)
+                res.status(200)         
+            })
+        }catch(err){
+            console.log(`Problem with server or bad request: ${err}`)
+            res.status(500).json()
+        }
+    }
+
+    openAuthPage = (req, res)=>{
+        try{
+            res.sendFile(this.pageAuth, (err)=>{
+                if(err){
+                    console.log(`Problem with sending Auth page: ${err}`)
+                    return res.status(400).json()
+                }
+                console.log(`Auth page ssuccessful opened`)
+                res.status(200)
             })
         }catch(err){
             console.log(`Problem with server or bad request: ${err}`)

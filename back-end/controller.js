@@ -57,7 +57,7 @@ class Controller {
             console.log(`Username, Login and password are required`)
             return res.status(400).json();
         }
-        const existUser = await pool.query(`SELECT * FROM users WHERE login = ($1)`,[login])
+        const existUser = await pool.query(`SELECT * FROM "Users" WHERE login = ($1)`,[login])
         if(existUser.rowCount>0){
             console.log(`User with this email or phone number ${existUser.rows[0].email_address} are already exist,`)
             return res.status(409).json()
@@ -66,7 +66,7 @@ class Controller {
             const hashedPassword = await bcrypt.hash(password, saltLvl)
             console.log(`Hashed password: ${hashedPassword}`)
 
-            const creatingUser = await pool.query(`INSERT INTO users (username, login, password) VALUES ($1, $2, $3) RETURNING user_id`,[username, login, hashedPassword])
+            const creatingUser = await pool.query(`INSERT INTO "Users" (username, login, password) VALUES ($1, $2, $3) RETURNING user_id`,[username, login, hashedPassword])
             if(creatingUser.rowCount===0){
                 console.log(`Problem with creating user in Database`)
                 res.status(400).json()
@@ -87,7 +87,7 @@ class Controller {
             return res.status(400).json()
         }
         try{
-            const dataBaseUserInf = await pool.query(`SELECT * FROM users WHERE login = ($1)`,[login])
+            const dataBaseUserInf = await pool.query(`SELECT * FROM "Users" WHERE login = ($1)`,[login])
             if(dataBaseUserInf.rowCount===0){
                 console.log(`User with this login ${login} is not exist`)
                 return res.status(401).json()

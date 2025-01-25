@@ -46,6 +46,7 @@ class Controller {
         }
     }
 
+    //Open Auth page
     openAuthPage = (req, res)=>{
         try{
             res.sendFile(this.pageAuth, (err)=>{

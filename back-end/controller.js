@@ -7,9 +7,9 @@ const pool = require('./database')
 
 class Controller {
 
-    pageMain = path.join(__dirname, '../Front-end/index.html') 
-    pageError = path.join(__dirname, '../front-end/error.html')
-    pageAuth = path.join(__dirname, '../front-end/authentication.html')
+    pageMain = path.join(__dirname, '../Front-end/html/index.html') 
+    pageError = path.join(__dirname, '../front-end/html/error.html')
+    pageAuth = path.join(__dirname, '../front-end/html/authentication.html')
 
 
     //Open Main page

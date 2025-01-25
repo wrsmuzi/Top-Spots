@@ -1,0 +1,124 @@
+/*Обнуління*/
+*{padding: 0;margin: 0;border: 0;}
+*,*:before,*:after{-moz-box-sizing: border-box;-webkit-box-sizing: border-box;box-sizing: border-box;}
+:focus,:active{outline: none;}
+a:focus,a:active{outline: none;}
+nav,footer,header,aside{display: block;}
+html,body{height:100%;width:100%;font-size:100%;line-height:1;-ms-text-size-adjust:100%;-moz-text-size-adjust:100%;-webkit-text-size-adjust:100%;font-family: 'Montserrat';}
+input,button,textarea{font-family:inherit;}
+input::-ms-clear{display: none;}
+button{cursor: pointer;}
+button::-moz-focus-inner{padding:0;border:0;}
+a,a:visited{text-decoration: none;}
+a:hover{text-decoration: none;}
+ul li{list-style: none;}
+img{vertical-align: top;}
+h1,h2,h3,h4,h5,h6{font-weight: 600;}
+
+
+
+.wrapper {
+}
+.left_main_block {
+    background-color: rgb(117, 117, 117);
+    width: 50%;
+    height: 100%;
+    padding: 45px 0px;
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.logo_header {
+    width: 100%;
+    padding: 0px 54px;
+    height: 150px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: black;
+    
+}
+.logo_img_block {
+    width: 30%;
+    height: 100%;
+    
+}
+.logo_img{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.home_page_block {
+    justify-content: center;
+    align-content: center;
+    background-color: rgba(240, 248, 255, 0);
+    
+}
+.home_page_btn {
+    background-color: rgba(97, 98, 99, 0);
+    /* border-width: 1px;
+    border-color: azure;
+    border-style: solid; */
+    padding: 5px 5px;
+    letter-spacing: 2px;
+}
+.home_page_btn span{
+    letter-spacing: 0.9px;
+    font-weight: 500;
+    color:white;
+    font-size: 24px;
+    text-shadow: 0.8px 0.8px 0.2px  #000;
+    transition-duration: 0.5s;
+    position: relative;
+}
+.home_page_btn span::after{
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    height: 3px;
+    width: 100%;
+    color: white;
+    background-color: white;
+  
+    border-radius: 5px;
+    transform: scaleX(0);
+    transition: transform .3s;
+  }
+  
+  .home_page_btn span:hover::after{
+  
+    transform: scaleX(1.0);
+  }
+.block_for_padding{
+    padding: 0px 104px;
+}
+  
+.registration_block {
+    padding: 0px 54px;
+}
+.welcome_block {
+}
+.welcome_text_01 {
+}
+.welcome_text_02 {
+}
+.google_block {
+}
+.or_block {
+}
+.or_text {
+}
+.data_entry {
+}
+.Check_remember {
+}
+.register_btn {
+}
+.login_block {
+}
+.login_text {
+}
+.login_btn {
+}

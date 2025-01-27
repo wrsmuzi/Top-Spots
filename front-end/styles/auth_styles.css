@@ -20,7 +20,7 @@ h1,h2,h3,h4,h5,h6{font-weight: 600;}
 .wrapper {
 }
 .left_main_block {
-    background-color: rgb(117, 117, 117);
+    background-color: rgb(255, 255, 255);
     width: 50%;
     height: 100%;
     padding: 45px 0px;
@@ -99,26 +99,138 @@ h1,h2,h3,h4,h5,h6{font-weight: 600;}
     padding: 0px 54px;
 }
 .welcome_block {
+    margin-top: 20px;
+    text-align: center;
+    margin-bottom: 45px;
 }
 .welcome_text_01 {
+    font-size: 38px;
+    padding: 5px 0;
 }
 .welcome_text_02 {
+    font-size: 22px;
+    padding: 5px 0;
 }
 .google_block {
+    background-color: aqua;
+    height: 50px;
+    margin-bottom: 40px;
 }
-.or_block {
+.or_block { 
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;  
+}
+.block_for_line{
+    width: 40%;
 }
 .or_text {
+    color: rgb(182, 182, 182);
+    font-size: 18px;
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+}
+.or_text::before,
+.or_text::after {
+    content: "";
+    flex-grow: 1; 
+    height: 2px; 
+    background-color: rgb(182, 182, 182);; /* Колір лінії */
 }
 .data_entry {
+    display: flex;
+    justify-content: center;
+}
+.reg_form{
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+    width: 55%;
+}
+.reg_input{
+    font-size: 18px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #d4d4d4a9;
+    padding: 10px 10px;
+    margin: 5px 0;
+    width: 100%;
+    background-color: #ffffff67;
+    color: #000;
+    transition: all 1s;
+}
+.reg_input::placeholder{
+    color: #6e6e6e;
+    font-size: 20px;
+   
+}
+.reg_input:hover{
+    background-color: #eeeeee; 
+}
+.reg_input:focus{
+    box-shadow: 0px 0px 15px 2px rgba(0, 0, 0, 0.253);
+    background-color: #ffffff;
+}
+.block_for_remember{
+    margin-top: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start; 
+    margin-bottom: 30px;
+
 }
 .Check_remember {
 }
+input[type="checkbox"] {
+    accent-color: rgb(0, 0, 0);
+}
 .register_btn {
+    font-size: 20px;
+    width: 100%;
+    background-color: #000;
+    color: #eeeeee;
+    padding: 10px 0;
+    letter-spacing: 2px;
+    border-radius: 45px;
+    transition: all 0.5s;
+    margin-bottom: 20px;
+}
+.register_btn:hover{
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.438);
+    transform: translateY(-4px);
+}
+.register_btn:active{
+    box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, 0.363);
+    transform: scale(0.98);
 }
 .login_block {
+    display: flex;
+    justify-content: center;
+    text-align: center;
 }
 .login_text {
+    width: 55%;
+    font-size: 18px;
+    font-weight: normal;
 }
 .login_btn {
+    color: rgb(209, 179, 11);
+    font-weight: 600;
+    font-size: 20px;
+    background-color: #6e6e6e00;
+    transition: all 0.5s;
+}
+.login_btn:hover{
+    text-shadow: 0px 0px 4px #00000062;
+
+}
+
+
+
+
+/* ----------------------Move block-------------------- */
+.reg_form_no_active{
+    display: none;
 }

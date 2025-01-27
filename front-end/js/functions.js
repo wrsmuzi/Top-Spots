@@ -1,7 +1,5 @@
-
- class functionsHandler {
-
-
+//----------------Class with functions for auth_fr.js --> authentication.html------------------------------------------------------
+ class authFunctionsHandler {
     //----------------------Function to control Log In answer of status code from back end--------------------------------------
     statusLogInController = (status)=>{
         if(!status){
@@ -49,8 +47,6 @@
                 break;
         }
     }
-
-
     //---------------------Function for Log In---------------------------------------------------------------------
     sendLogIn = async (obj)=>{
         try{
@@ -68,7 +64,6 @@
             throw new Error(`Problem with server: ${err.statusText}`)
         }
     }
-
     // ---------------------Function for Sign Up---------------------------------------------------------------------
     sendSignUp = async (obj)=>{
         try{
@@ -86,8 +81,15 @@
             throw new Error(`Problem with server: ${err.statusText}`)
         }
     }
+}
 
+
+
+//----------------Class with functions for index_fr.js --> index.html------------------------------------------------------
+class indexFunctionsHandler{
 
 }
 
-export default functionsHandler;
+
+//--------------Export classes in another files-----------------------------------
+export { authFunctionsHandler, indexFunctionsHandler };

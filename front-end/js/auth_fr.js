@@ -48,13 +48,26 @@ const Functions = new authFunctionsHandler()
 // })
 
 document.addEventListener('DOMContentLoaded', ()=>{
+    const registerForm = document.getElementById('registratioBlock');
+    const loginBlock = document.getElementById('loginBlock')
+// from registration in login
     const openLogIn = document.getElementById('openLogIn');
     openLogIn.addEventListener('click', () => {
-    const registerForm = document.querySelector('.registration_block');
-    if (!registerForm) {
-        console.error('Element with class "registration_block" not found.');
-        return;
-    }
-    registerForm.classList.add('reg_form_no_active'); // Додаємо клас
-});
+        registerForm.classList.toggle('auth_active')
+        registerForm.classList.toggle('auth_inactive')
+        loginBlock.classList.toggle('auth_inactive')
+        loginBlock.classList.toggle('auth_active')
+  })
+// from login in registration
+    const openRegisterBtn = document.getElementById('openRegister')
+    openRegisterBtn.addEventListener('click', ()=>{
+        loginBlock.classList.toggle('auth_active')
+        loginBlock.classList.toggle('auth_inactive')
+        registerForm.classList.toggle('auth_inactive')
+        registerForm.classList.toggle('auth_active')
+   })
+    
 })
+
+
+   

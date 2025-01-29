@@ -18,6 +18,13 @@ h1,h2,h3,h4,h5,h6{font-weight: 600;}
 
 
 .wrapper {
+    background-image: url('../img/mother-motherland-monument-sunset-kiev-ukraine.jpg');
+    background-size: cover; /* Заповнює весь блок */
+    background-position: center; /* Центрує зображення */
+    background-repeat: no-repeat; /* Вимикає повторення */
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
 }
 .left_main_block {
     background-color: rgb(255, 255, 255);
@@ -193,6 +200,11 @@ h1,h2,h3,h4,h5,h6{font-weight: 600;}
 }
 input[type="checkbox"] {
     accent-color: rgb(0, 0, 0);
+}
+.answer_text{
+    font-size: 16px;
+    text-align: center;
+    padding: 10px 0px;
 }
 .regAndlog_main_btn {
     font-size: 20px;

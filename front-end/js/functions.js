@@ -6,19 +6,19 @@
             console.log(`Status controller have not status receive`)
             return
         }
-        const loginAnswer = document.querySelector(`.login_answer`)
+        const loginAnswer = document.querySelector(`.block_for_answer_log`)
         switch(status) {
             case 200: 
-                loginAnswer.innerHTML=`<h1 class="login_answer_text">You have successfully logged in</h1>`
+                loginAnswer.innerHTML=`<h1 class="answer_text">You have successfully logged in</h1>`
                 break;
             case 401:
-                loginAnswer.innerHTML=`<h1 class="login_answer_text">Wrong login or password</h1>`
+                loginAnswer.innerHTML=`<h1 class="answer_text">Wrong login or password</h1>`
                 break;
             case 429:
-                loginAnswer.innerHTML=`<h1 class="login_answer_text">Too many requests, please try again later</h1>`
+                loginAnswer.innerHTML=`<h1 class="answer_text">Too many requests, please try again later</h1>`
                  break;
             default:
-                loginAnswer.innerHTML=`<h1 class="login_answer_text">An error occurred, we are working on it</h1>`
+                loginAnswer.innerHTML=`<h1 class="answer_text">An error occurred, we are working on it</h1>`
                 break;
         }
     }
@@ -28,22 +28,22 @@
             console.log(`Status controller have not status receive`)
             return
         }
-        const loginAnswer = document.querySelector(`.signup_answer`)
+        const loginAnswer = document.querySelector(`.block_for_answer_reg`)
         switch(status) {
             case 201: 
-                loginAnswer.innerHTML=`<h1 class="login_answer_text">You have successfully registered</h1>`
+                loginAnswer.innerHTML=`<h1 class="answer_text">You have successfully registered</h1>`
                 break;
             case 400:
-                loginAnswer.innerHTML=`<h1 class="login_answer_text">Please check the correctness of the entered data</h1>`
+                loginAnswer.innerHTML=`<h1 class="answer_text">Please check the correctness of the entered data</h1>`
                 break;
             case 409:
-                loginAnswer.innerHTML=`<h1 class="login_answer_text">Registration failed, please try again</h1>`
+                loginAnswer.innerHTML=`<h1 class="answer_text">Registration failed, please try again</h1>`
                 break;
             case 429:
-                loginAnswer.innerHTML=`<h1 class="login_answer_text">Too many requests, please try again later</h1>`
+                loginAnswer.innerHTML=`<h1 class="answer_text">Too many requests, please try again later</h1>`
                  break;
             default:
-                loginAnswer.innerHTML=`<h1 class="login_answer_text">An error occurred, we are working on it</h1>`
+                loginAnswer.innerHTML=`<h1 class="answer_text">An error occurred, we are working on it</h1>`
                 break;
         }
     }

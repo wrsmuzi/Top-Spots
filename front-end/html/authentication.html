@@ -14,7 +14,7 @@
                         <img class="logo_img" src="../img/photo_2025-01-25_22-09-20-Photoroom.png" alt="Company Logo">
                     </div>
                     <div class="home_page_block">
-                        <button class="home_page_btn"><span>Home</span></button>
+                        <button class="home_page_btn" onclick="window.location.href='/'"><span>Home</span></button>
                     </div>
                 </div>
                 <!------------------------------- Registration block----------------------------------- -->
@@ -34,8 +34,9 @@
                     <div class="data_entry">
                         <form id="Registration_form" class="regAndlog_form">
                             <input type="text" class="regAndlog_input" name="username" placeholder="Name" required>
-                            <input type="text" class="regAndlog_input" name="login" placeholder="Email or Phone number" required>
-                            <input type="password" class="regAndlog_input" name="password" placeholder="Password" required>
+                            <input type="email" class="regAndlog_input" name="login" placeholder="Email" required>
+                            <input type="password" id="regPassword" class="regAndlog_input " name="password" placeholder="Password" required>
+                            <div class="reg_password_visibility_btn"></div>
 
                             <div class="block_for_answer_reg"></div>
 
@@ -69,8 +70,9 @@
                     </div>
                     <div class="data_entry">
                         <form id="Login_form" class="regAndlog_form">
-                            <input type="text" class="regAndlog_input" name="login" placeholder="Login" required>
-                            <input type="password" class="regAndlog_input" name="password" placeholder="Password" required>
+                            <input type="email" class="regAndlog_input" name="login" placeholder="Email" required>
+                            <input type="password" id="logPassword" class="regAndlog_input" name="password" placeholder="Password" required>
+                            <div class="log_password_visibility_btn"></div>
 
                             <div class="block_for_answer_log"></div>
 
@@ -91,6 +93,13 @@
                 </div>
                
             </div>
+            <div class="right_main_block">
+                <img src="" alt="Background Image" class="right_main_img">
+            </div>
+            <div class="shadow_block_01"></div>
+            <div class="shadow_block_02"></div>
+            <div class="shadow_block_03"></div>
+            <div class="shadow_block_04"></div>
         </div>
 
 

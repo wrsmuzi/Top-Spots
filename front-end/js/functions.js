@@ -1,6 +1,6 @@
-//----------------Class with functions for auth_fr.js --> authentication.html------------------------------------------------------
+//----------------  Class with functions for auth_fr.js --> authentication.html  -----------------------------------------
  class authFunctionsHandler {
-    //----------------------Function to control Log In answer of status code from back end--------------------------------------
+    //---------------------- Function to control Log In answer of status code from back end -----------------------------
     statusLogInController = (status)=>{
         if(!status){
             console.log(`Status controller have not status receive`)
@@ -22,7 +22,7 @@
                 break;
         }
     }
-    //----------------------Function to control Sign Up answer of status code from back end--------------------------------------
+    //---------------------- Function to control Sign Up answer of status code from back end ------------------------
     statusSignUpController = (status)=>{
         if(!status){
             console.log(`Status controller have not status receive`)
@@ -47,7 +47,7 @@
                 break;
         }
     }
-    //---------------------Function for Log In---------------------------------------------------------------------
+    //--------------------- Function for Log In -----------------------------------------------------
     sendLogIn = async (obj)=>{
         try{
             const sendingData = await fetch('http://localhost:3500/api/logIn',{
@@ -64,7 +64,7 @@
             throw new Error(`Problem with server: ${err.statusText}`)
         }
     }
-    // ---------------------Function for Sign Up---------------------------------------------------------------------
+    // --------------------- Function for Sign Up ------------------------------------------------------
     sendSignUp = async (obj)=>{
         try{
             const sendingData = await fetch('http://localhost:3500/api/signUp',{
@@ -80,6 +80,24 @@
             console.log(`Internal sevrver error`)
             throw new Error(`Problem with server: ${err.statusText}`)
         }
+    }
+    //-------------------- Function for Controll Password Visibility ---------------------------------------
+    controllPasswordVisibility = (passwordField, passwordLockBtn, showPassword, blockPassword)=>{
+    if (passwordField.type === "password") {
+        passwordField.type = "text"; // Show password
+        passwordLockBtn.style.opacity = "0";
+        setTimeout(()=>{
+            passwordLockBtn.style.backgroundImage = blockPassword;
+            passwordLockBtn.style.opacity = "1";
+        }, 200)
+    } else {
+        passwordField.type = "password"; // Block passsword
+        passwordLockBtn.style.opacity = "0";
+        setTimeout(()=>{
+            passwordLockBtn.style.opacity = "1";
+            passwordLockBtn.style.backgroundImage = showPassword;
+        }, 200)
+    }
     }
 }
 

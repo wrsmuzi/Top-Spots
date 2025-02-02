@@ -18,13 +18,29 @@ h1,h2,h3,h4,h5,h6{font-weight: 600;}
 
 
 .wrapper {
-    background-image: url('../img/mother-motherland-monument-sunset-kiev-ukraine.jpg');
-    background-size: cover; /* Заповнює весь блок */
-    background-position: center; /* Центрує зображення */
-    background-repeat: no-repeat; /* Вимикає повторення */
     width: 100%;
     height: 100%;
     overflow: hidden;
+    position: relative;
+}
+
+.right_main_block {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+.right_main_img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: relative;
+    z-index: 1;
 }
 .left_main_block {
     background-color: rgb(255, 255, 255);
@@ -33,19 +49,77 @@ h1,h2,h3,h4,h5,h6{font-weight: 600;}
     padding: 45px 0px;
     display: flex;
     flex-direction: column;
-    position: relative;
-    /* overflow: hidden; */
-    
+    position: relative;  
 }
+
+.shadow_block_01 {
+    position: absolute;
+    bottom: 0;
+    left: 45%;
+    background-color: rgb(0, 0, 0);
+    height: 100%;
+    width: 10%;
+    -webkit-mask-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 100%), 
+    linear-gradient(to left, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 100%);
+    mask-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 100%), 
+    linear-gradient(to left, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 100%);
+    z-index: 3;
+}
+.shadow_block_02 {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    background-color: rgb(0, 0, 0);
+    height: 10%;
+    width: 50%;
+    -webkit-mask-image: 
+        linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%);
+    mask-image: 
+        linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%);
+    z-index: 4;
+}
+.shadow_block_03 {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: rgb(0, 0, 0);
+    height: 100%;
+    width: 10%;
+    -webkit-mask-image: 
+        linear-gradient(to left, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%);
+    mask-image: 
+        linear-gradient(to left, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%);
+    z-index: 5;
+}
+.shadow_block_04 {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: rgb(0, 0, 0);
+    height: 10%;
+    width: 50%;
+    -webkit-mask-image: 
+        linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%);
+    mask-image: 
+        linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%);
+    z-index: 6;
+}
+
+
+
+
 
 .logo_header {
     width: 100%;
-    padding: 0px 54px;
-    height: 150px;
+    padding: 0 15% 0 5%;
+    height: 17.5%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     background-color: black;
+    
     
 }
 .logo_img_block {
@@ -62,6 +136,7 @@ h1,h2,h3,h4,h5,h6{font-weight: 600;}
     justify-content: center;
     align-content: center;
     background-color: rgba(240, 248, 255, 0);
+    
     
 }
 .home_page_btn {
@@ -188,6 +263,35 @@ h1,h2,h3,h4,h5,h6{font-weight: 600;}
     box-shadow: 0px 0px 15px 2px rgba(0, 0, 0, 0.253);
     background-color: #ffffff;
 }
+
+.reg_password_visibility_btn{
+    position: absolute;
+    top: 43.4%;
+    left: 68%;
+    width: 2.5%;
+    height: 2.5%;
+    background-image: url('../img/opened-Eyes.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    pointer-events: auto;
+    cursor: pointer;
+    transition: opacity 0.5s ease;
+}
+.log_password_visibility_btn{
+    position: absolute;
+    top: 37.9%;
+    left: 68%;
+    width: 2.5%;
+    height: 2.5%;
+    background-image: url('../img/opened-Eyes.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    pointer-events: auto;
+    cursor: pointer;
+    transition: opacity 0.5s ease;
+}
 .block_for_remember{
     margin-top: 10px;
     width: 100%;
@@ -284,3 +388,4 @@ input[type="checkbox"] {
     visibility: hidden;
    
 }
+

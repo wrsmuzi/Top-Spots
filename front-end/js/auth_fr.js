@@ -13,9 +13,9 @@ loginForm.addEventListener('submit', async (event)=>{
     
     const formObj = new FormData(loginForm)
     const inputValues = Object.fromEntries(formObj.entries())
-    const {login, password}=inputValues
+    const {email, password}=inputValues
 
-    if(!login?.trim() || !password.trim()){
+    if(!email?.trim() || !password.trim()){
         const loginAnswer = document.querySelector('.block_for_answer_log')
         return loginAnswer.innerHTML=`<h1 class="answer_text">Login and password are required</h1>` 
     }
@@ -34,9 +34,9 @@ signUpForm.addEventListener('submit', async(event)=>{
 
     const formObj = new FormData(signUpForm)
     const  inputValues = Object.fromEntries(formObj.entries())
-    const {username, login, password}= inputValues
+    const {username, email, password}= inputValues
 
-    if(!username?.trim() || !login?.trim() || !password?.trim()){
+    if(!username?.trim() || !email?.trim() || !password?.trim()){
         const signupAnswer = document.querySelector('.block_for_answer_reg')
         return signupAnswer.innerHTML=`<h1 class="answer_text">Usernaame, login and password are required</h1>`
     }
@@ -88,6 +88,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 })
 
 // ---------------------Show and lock password---------------
+//Show and lock in register
 const regPasswordField = document.getElementById('regPassword');
 const regCheckVsbBtn = document.querySelector('.reg_password_visibility_btn');
 regCheckVsbBtn.addEventListener('click', () => {
@@ -95,7 +96,7 @@ regCheckVsbBtn.addEventListener('click', () => {
     const blockPassword = "url('../img/closed-Eyes.png')";
     Functions.controllPasswordVisibility(regPasswordField, regCheckVsbBtn, showPassword, blockPassword);
 });
-
+//Show and lock in log in
 const logpasswordField = document.getElementById('logPassword');
 const logCheckVsbBtn = document.querySelector('.log_password_visibility_btn');
 logCheckVsbBtn.addEventListener('click', () => {

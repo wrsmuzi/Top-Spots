@@ -66,23 +66,23 @@ class Controller {
 
     //Registration
     signUp = async (req, res) =>{
-        const{username, login, password}=req.body
+        const{username, email, password}=req.body
         const saltLvl=10
 
-        if (!username || !login || !password) {
+        if (!username || !email || !password) {
             console.log(`Username, Login and password are required`)
             return res.status(400).json();
         }
-        const existUser = await pool.query(`SELECT * FROM "Users" WHERE login = ($1)`,[login])
+        const existUser = await pool.query(`SELECT * FROM "Users" WHERE email = ($1)`,[email])
         if(existUser.rowCount>0){
-            console.log(`User with this email or phone number ${existUser.rows[0].email_address} are already exist,`)
+            console.log(`User with this email or phone number ${existUser.rows[0].email} are already exist,`)
             return res.status(409).json()
         }
         try{
             const hashedPassword = await bcrypt.hash(password, saltLvl)
             console.log(`Hashed password: ${hashedPassword}`)
 
-            const creatingUser = await pool.query(`INSERT INTO "Users" (username, login, password) VALUES ($1, $2, $3) RETURNING user_id`,[username, login, hashedPassword])
+            const creatingUser = await pool.query(`INSERT INTO "Users" (username, email, password) VALUES ($1, $2, $3) RETURNING user_id`,[username, email, hashedPassword])
             if(creatingUser.rowCount===0){
                 console.log(`Problem with creating user in Database`)
                 res.status(400).json()
@@ -91,21 +91,21 @@ class Controller {
             res.status(201).json()
         }catch(err){
             console.log(`Problem with server`)
-            res.status(500).json()
+            res.status(500).json()  
         }
     }
 
     //Log in 
     logIn = async (req, res)=>{
-        const{login, password}=req.body
-        if(!login || !password){
+        const{email, password}=req.body
+        if(!email || !password){
             console.log(`User have not entered login or password`)
             return res.status(400).json()
         }
         try{
-            const dataBaseUserInf = await pool.query(`SELECT * FROM "Users" WHERE login = ($1)`,[login])
+            const dataBaseUserInf = await pool.query(`SELECT * FROM "Users" WHERE email = ($1)`,[email])
             if(dataBaseUserInf.rowCount===0){
-                console.log(`User with this login ${login} is not exist`)
+                console.log(`User with this email ${email} is not exist`)
                 return res.status(401).json()
             }
             const user = dataBaseUserInf.rows[0]
@@ -114,7 +114,7 @@ class Controller {
                 console.log(`User have entered wrong password`)
                 return res.status(401).json()
             }
-            console.log(`User with this login ${login} successfully logged in`)
+            console.log(`User with this email ${email} successfully logged in`)
             return res.status(200).json()
 
         }catch(err){

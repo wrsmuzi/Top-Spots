@@ -15,7 +15,7 @@ loginForm.addEventListener('submit', async (event)=>{
     const inputValues = Object.fromEntries(formObj.entries())
     const {email, password}=inputValues
 
-    if(!email?.trim() || !password.trim()){
+    if(!email?.trim() || !password?.trim()){
         const loginAnswer = document.querySelector('.block_for_answer_log')
         return loginAnswer.innerHTML=`<h1 class="answer_text">Login and password are required</h1>` 
     }

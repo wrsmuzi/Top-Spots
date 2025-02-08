@@ -5,9 +5,6 @@ const router = require('./router.js')
 const cors = require('cors');
 require('dotenv').config({ path: path.resolve(__dirname, './privateInf.env') });
 
-console.log(`Loaded HOST: ${process.env.HOST}`);
-console.log(`Loaded PORT: ${process.env.PORT}`);
-
 app.use(express.static(path.join(__dirname, '../Front-end')));
 app.use(express.json())
 

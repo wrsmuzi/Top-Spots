@@ -2,11 +2,13 @@
  class authFunctionsHandler {
      //--------------------- Function about Offer to Confirm Email -----------------------------------------------------
      offerToConfirmEmail = ()=>{
-        const regMainForm = document.querySelector('.registration_main_block')
-        const regSubForm = document.querySelector('.registration_sub_block')
-        regSubForm.classList.add('invalidRegForm')
-        regMainForm.innerHTML=`
+        const mainBlockForAll = document.querySelector('.main_block_for_all')
+        const regBlock = document.getElementById('registratioBlock')
+        const emailInput = document.getElementById('regAndlog_input').value
+        regBlock.classList.add('invalidRegForm')
+        mainBlockForAll.innerHTML=`
        <div class="offerToConfirm_main_block">
+         <div class="offerToConfirm_sub_block">
             <div class="otc_block_for_img_01">
                 <img class="otc_header_img" src="../img/email-6370595_1280.jpg" alt="">
             </div>
@@ -17,15 +19,18 @@
               </div>
             </div>
             <div class="otc_block_for_text">
-            <p class="otc_sub_text">We have sent email to .. to confirm the validity of your email address. After receiving the email follow the link provided complete your registration </p>
+            <p class="otc_sub_text">We have sent email to <span class="otc_email_text">${emailInput}</span> to confirm the validity of your email address. After receiving the email follow the link provided complete your registration </p>
             <p class="otc_sub_text_02">Once you confirm your email, your account will be activated</p>
             </div>
+            <div class="block_for_line">
             <div class="otc_line"></div>
-            <p class="otc_ask_for_resent">If you have not get any mail from us</p>
+            </div>
+            <p class="otc_ask_for_resent">If you haven't received any emails from us</p>
             <div class="block_for_timer"></div>
             <div class="otc_block_for_btn">
                <button class="otc_btn" id="otcResendEmail">Resend Email</button>
             </div>
+          </div>
         </div>`
         
             const resentBtn = document.getElementById('otcResendEmail')
@@ -41,7 +46,7 @@
                 const counting = setInterval(()=>{
                     timer--
                     blockTimer.innerHTML=`
-                    <p class="timer">You can reset your email in ${timer}</p>`
+                    <p class="timer">You can reset your email in ${timer}s</p>`
                     if(timer<=0){
                         clearInterval(counting)
                         resentBtn.disabled = false

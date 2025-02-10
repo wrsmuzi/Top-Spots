@@ -1,7 +1,10 @@
 const express = require('express')
 const path = require('path')
 const bcrypt = require('bcrypt')
+const crypto = require('crypto')
 const pool = require('./database') 
+const nodemailer = require('nodemailer')
+require('dotenv').config({ path: path.resolve(__dirname, './privateInf.env') });
 
 
 
@@ -63,6 +66,33 @@ class Controller {
         }
     }
 
+    //Sending Email
+    sendingEmail = async (to, subject, htmlEmailContent) => {
+        try {
+            const transporter = nodemailer.createTransport({
+                service: "gmail",
+                auth: {
+                    user: process.env.EMAILSENDER, //  My Email 
+                    pass: process.env.GOOGLEAPPPASSWORD //  Google App Password 
+                }
+            });
+    
+            const emailOptions = {
+                from: process.env.EMAILSENDER, 
+                to, 
+                subject, 
+                html: htmlEmailContent 
+            };
+    
+            const sending = await transporter.sendMail(emailOptions);
+            console.log(`Email sent: ${sending.response}`);
+        } catch (err) {
+            console.log(`Error sending email: ${err}`);
+        }
+    };
+
+    
+
 
     //Registration
     signUp = async (req, res) =>{
@@ -81,13 +111,25 @@ class Controller {
         try{
             const hashedPassword = await bcrypt.hash(password, saltLvl)
             console.log(`Hashed password: ${hashedPassword}`)
-
-            const creatingUser = await pool.query(`INSERT INTO "Users" (username, email, password) VALUES ($1, $2, $3) RETURNING user_id`,[username, email, hashedPassword])
+            
+            //Creating Email Verification Token
+            const EmailVereficationToken = crypto.randomBytes(32).toString('hex')
+            const creatingEVToken = await pool.query('INSERT INTO "EVToken" (ev_token) VALUES ($1) RETURNING token_id', [EmailVereficationToken])
+            const EVToken = creatingEVToken.rows[0]?.token_id || null;
+            //Creating/Sending User and EVToken
+            const creatingUser = await pool.query(`INSERT INTO "Users" (username, email, password, token_id) VALUES ($1, $2, $3, $4) RETURNING user_id`,[username, email, hashedPassword, EVToken])
             if(creatingUser.rowCount===0){
-                console.log(`Problem with creating user in Database`)
+                console.log(`Problem with creating user or evtoken in Database`)
                 res.status(400).json()
                 return
             }
+            const emailContent = `
+            <div style="font-family: Arial, sans-serif; text-align: center; padding: 20px;">
+                <h2>Привіт, ${username}!</h2>
+                <p>Дякуємо за реєстрацію. Натисніть кнопку нижче, щоб підтвердити вашу електронну адресу:</p>
+                <p>Якщо ви не реєструвалися, просто ігноруйте цей лист.</p>
+            </div>`;
+             await this.sendingEmail(email, "Email Confirmation", emailContent);
             res.status(201).json()
         }catch(err){
             console.log(`Problem with server`)

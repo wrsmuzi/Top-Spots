@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt')
 const crypto = require('crypto')
 const pool = require('./database') 
 const nodemailer = require('nodemailer')
+const jwt = require('jsonwebtoken')
 require('dotenv').config({ path: path.resolve(__dirname, './privateInf.env') });
 
 
@@ -90,6 +91,86 @@ class Controller {
             console.log(`Error sending email: ${err}`);
         }
     };
+    // Email Letter Html content
+    emailLetterContent = (username, token) =>{
+        return `
+            <div style="font-family: Arial, sans-serif; text-align: center; padding: 20px;">
+                <h2>Привіт, ${username}!</h2>
+                <p>Дякуємо за реєстрацію. Натисніть на посилання нижче, щоб підтвердити вашу електронну адресу:</p>
+                <a href="http://localhost:3500/api/verify-email?token=${token}">Підтвердити ваш емайл</a>
+                <p>Якщо ви не реєструвалися, просто ігноруйте цей лист.</p>
+            </div>`;
+    }
+    // Creating JWT Token and sending to Data BASE
+    creatingJwtToken = async (evtoken_id) =>{
+        const userInf = await pool.query(`SELECT username, email  FROM "Users" WHERE evtoken_id = $1`,[evtoken_id]);
+        const username = userInf.rows[0].username
+        const email = userInf.rows[0].email
+        const payload = {
+            username,
+            email
+        }
+        const accessToken = jwt.sign(payload, process.env.ACCESSJWTTOKEN, { expiresIn: "15m" })
+        const refreshToken = jwt.sign(payload, process.env.REFRESHJWTTOKEN, { expiresIn: "7d" })
+        const saveToken = await pool.query(`INSERT INTO "JWTRefreshToken" (refresh_token) VALUES ($1) RETURNING reftoken_id`,[refreshToken])
+        if (saveToken.rowCount === 0) {
+            console.log(`Refresh Token have not saved in Database`);
+            return { refreshToken: null, accessToken: null };  
+        }
+        const refTokenId = saveToken.rows[0].reftoken_id;
+        const updateRefToken = await pool.query(`UPDATE "Users" SET reftoken_id = $1 WHERE evtoken_id = $2 RETURNING user_id`,[refTokenId, evtoken_id])
+        if(updateRefToken.rowCount===0){
+            return console.log(`Refresh Token have not updated in Users table`)
+        }
+        console.log(`Refresh Token is saved in Database`)
+        return { refreshToken, accessToken }
+    }
+
+    //Email Varification
+    emailVerify = async (req, res) =>{
+        try{
+            const {token}=req.query
+            if(!token){
+                console.log(`EVToken is failed, can't to verify email`)
+                return
+            }
+            const checkToken = await pool.query(`SELECT evtoken_id FROM "EVToken" where ev_token=$1`,[token])
+            if(checkToken.rowCount===0){
+                console.log(`Database has no this token, so wew can't conform email`)
+                return
+            }
+            const chekedTokenId = checkToken.rows[0].evtoken_id
+            console.log(`Token id: ${chekedTokenId}`)
+
+            const isVerified = await pool.query(`UPDATE "Users" SET is_verified = true WHERE evtoken_id = $1 RETURNING is_verified`,[chekedTokenId])
+            if(isVerified.rowCount===0){
+                console.log(`Problem with updating isVerified`)
+                return
+            }
+            console.log(`Verification is completed`)
+            const verificationStatus = isVerified.rows[0].is_verified
+    
+            const { refreshToken, accessToken} =  await this.creatingJwtToken(chekedTokenId)
+            if (!refreshToken || !accessToken) {
+                    console.log(`Error: JWT tokens were not created properly`);
+                    return res.status(500).json({ error: "JWT token generation failed" });
+            }
+            res.cookie("refreshToken", refreshToken,{
+                    httpOnly: true,     // Defend from XSS
+                    secure: true,       // Only  HTTPS
+                    sameSite: "Strict", // Defend from CSRF
+                    maxAge: 7 * 24 * 60 * 60 * 1000 // Alive time
+            })
+            
+            res.status(200).json({accessToken})
+
+
+
+        }catch(err){
+            console.log(`Problem with confirmation EVtoken or updating isVerified: ${err}`)
+            res.status(500).json()
+        }
+    }
 
     
 
@@ -114,25 +195,26 @@ class Controller {
             
             //Creating Email Verification Token
             const EmailVereficationToken = crypto.randomBytes(32).toString('hex')
-            const creatingEVToken = await pool.query('INSERT INTO "EVToken" (ev_token) VALUES ($1) RETURNING token_id', [EmailVereficationToken])
-            const EVToken = creatingEVToken.rows[0]?.token_id || null;
-            //Creating/Sending User and EVToken
-            const creatingUser = await pool.query(`INSERT INTO "Users" (username, email, password, token_id) VALUES ($1, $2, $3, $4) RETURNING user_id`,[username, email, hashedPassword, EVToken])
+            const creatingEVToken = await pool.query('INSERT INTO "EVToken" (ev_token) VALUES ($1) RETURNING evtoken_id', [EmailVereficationToken])
+            const EVToken = creatingEVToken.rows[0]?.evtoken_id || null;
+            if (!EVToken) {
+                console.log("Error creating evtoken");
+                res.status(500).json();
+                return;
+            }
+            //Creating/Sending User and EVToken in database
+            const creatingUser = await pool.query(`INSERT INTO "Users" (username, email, password, evtoken_id) VALUES ($1, $2, $3, $4) RETURNING user_id`,[username, email, hashedPassword, EVToken])
             if(creatingUser.rowCount===0){
                 console.log(`Problem with creating user or evtoken in Database`)
                 res.status(400).json()
                 return
             }
-            const emailContent = `
-            <div style="font-family: Arial, sans-serif; text-align: center; padding: 20px;">
-                <h2>Привіт, ${username}!</h2>
-                <p>Дякуємо за реєстрацію. Натисніть кнопку нижче, щоб підтвердити вашу електронну адресу:</p>
-                <p>Якщо ви не реєструвалися, просто ігноруйте цей лист.</p>
-            </div>`;
-             await this.sendingEmail(email, "Email Confirmation", emailContent);
+            //Sending Email Confirmation
+            const emailContent = this.emailLetterContent(username, EmailVereficationToken);
+            await this.sendingEmail(email, "Email Confirmation", emailContent);
             res.status(201).json()
         }catch(err){
-            console.log(`Problem with server`)
+            console.log(`Problem with server, ${err}`)
             res.status(500).json()  
         }
     }

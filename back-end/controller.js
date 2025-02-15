@@ -14,6 +14,9 @@ class Controller {
     pageMain = path.join(__dirname, '../Front-end/html/index.html') 
     pageError = path.join(__dirname, '../front-end/html/error.html')
     pageAuth = path.join(__dirname, '../front-end/html/authentication.html')
+    pageEmailConfirmation = path.join(__dirname,'../front-end/html/email_confirmation.html' )
+
+
 
 
     //Open Main page
@@ -66,6 +69,24 @@ class Controller {
             res.status(500).json()
         }
     }
+    
+    //Open Email Confirmation page
+    openEmailConfirmation = (req, res)=>{
+        try{
+            res.sendFile(this.pageEmailConfirmation, (err)=>{
+                if(err){
+                    console.log(`Problem with sending Email Confirmation page: ${err}`)
+                    return res.status(400).json()
+                }
+                console.log(`Email Confirmation page ssuccessful opened`)
+                res.status(200)
+            })
+        }catch(err){
+            console.log(`Problem with server or bad request: ${err}`)
+            res.status(500).json()
+        }
+    }
+
 
     //Sending Email
     sendingEmail = async (to, subject, htmlEmailContent) => {
@@ -161,8 +182,16 @@ class Controller {
                     sameSite: "Strict", // Defend from CSRF
                     maxAge: 7 * 24 * 60 * 60 * 1000 // Alive time
             })
-            
-            res.status(200).json({accessToken})
+            res.cookie("accessToken",accessToken,{
+                httpOnly: true,     // Defend from XSS
+                secure: true,       // Only  HTTPS
+                sameSite: "Strict", // Defend from CSRF
+                maxAge: 15 * 60 * 1000  // Alive time
+
+            })
+        
+            // res.status(200).json({accessToken})
+            res.redirect('/email-confirmition');
 
 
 

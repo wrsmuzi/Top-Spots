@@ -95,9 +95,10 @@ min-height: 95%;
    
     
 }
-header-ul_elementer {
 
-}
+
+
+
 .header-ul_element a{
   letter-spacing: 0.9px;
     font-weight: 500;
@@ -171,7 +172,7 @@ position: absolute;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     padding: 5px 20px;
     backdrop-filter: blur(10px); /* Розмиття фону */
-    max-width: 900px;
+    max-width: 80%;
   }
 
   /* Секції вводу */
@@ -528,3 +529,76 @@ padding-top: 3%;
 .video-registr-loginVid{
 
 }
+
+
+
+
+
+
+
+
+
+.navbar {
+  position: relative;
+  padding: 10px;
+  background: #181818;
+  color: white;
+  text-align: right;
+}
+
+.menu-icon {
+  font-size: 24px;
+  cursor: pointer;
+  user-select: none;
+  padding: 10px;
+}
+
+.menu {
+  position: absolute;
+  top: 50px;
+  right: 10px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 200px;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none; /* Робить меню неклікабельним у закритому стані */
+}
+
+.menu.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu li {
+  border-bottom: 1px solid #ddd;
+}
+
+.menu li:last-child {
+  border-bottom: none;
+}
+
+.menu a {
+  display: block;
+  padding: 12px 20px;
+  color: black;
+  text-decoration: none;
+  transition: background 0.3s;
+}
+
+.menu a:hover {
+  background: #f0f0f0;
+}
+
+
+
+

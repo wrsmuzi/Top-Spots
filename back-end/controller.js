@@ -200,6 +200,30 @@ class Controller {
             res.status(500).json()
         }
     }
+    resentEmail = async (req, res) =>{
+        const {email}=req.body
+        if(!email){
+            console.log(`Email are required`)
+            return res.status(400).json();
+        }
+        const userInf = await pool.query(`SELECT evtoken_id FROM "Users" WHERE email = $1`,[email])
+        if(userInf.rowCount===0){
+            console.log(`We have not this email in database`)
+            return
+        }
+        const username = userInf.rows[0].username
+        const tokenId = userInf.rows[0].evtoken_id
+        const evtokenInf = await pool.query(`SELECT ev_token FROM "EVToken" WHERE evtoken_id = $1`,[tokenId])
+        if(evtokenInf.rowCount===0){
+            console.log(`We have not found evtoken in database`)
+            return
+        }
+        const EmailVereficationToken = evtokenInf.rows[0].ev_token
+
+        const emailContent = this.emailLetterContent(username, EmailVereficationToken);
+        await this.sendingEmail(email, "Email Confirmation", emailContent);
+        res.status(201).json({"createdEmail":email})
+    }
 
     
 
@@ -241,7 +265,7 @@ class Controller {
             //Sending Email Confirmation
             const emailContent = this.emailLetterContent(username, EmailVereficationToken);
             await this.sendingEmail(email, "Email Confirmation", emailContent);
-            res.status(201).json()
+            res.status(201).json({"createdEmail":email})
         }catch(err){
             console.log(`Problem with server, ${err}`)
             res.status(500).json()  

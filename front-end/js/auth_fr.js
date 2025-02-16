@@ -40,6 +40,7 @@ signUpForm.addEventListener('submit', async(event)=>{
         const signupAnswer = document.querySelector('.block_for_answer_reg')
         return signupAnswer.innerHTML=`<h1 class="answer_text">Usernaame, login and password are required</h1>`
     }
+    Functions.loadingAnimation()
     const sendingData = await Functions.sendSignUp(inputValues)
 })
 //------------------------------------ Move Login/Register form-----------------------------------------------

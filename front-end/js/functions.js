@@ -1,10 +1,52 @@
 //----------------  Class with functions for auth_fr.js --> authentication.html  -----------------------------------------
  class authFunctionsHandler {
-     //--------------------- Function about Offer to Confirm Email -----------------------------------------------------
-     offerToConfirmEmail = ()=>{
+    resentEmail = async (email) =>{
+        const obj = {
+            email
+        };
+        try{
+            const sentEmail = await fetch('http://localhost:3500/resent-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(obj)
+            })
+            // const responseData = await sentEmail.json();
+            // if(!responseData.createdEmail){
+            //     console.log(`No email arrived from the server`)
+            //     return      
+            // }
+
+        }catch(err){
+            console.log(`Internal sevrver error`)
+            throw new Error(`Problem with server: ${err.statusText}`)
+        }
+    }
+
+    
+    loadingAnimation = ()=>{
         const mainBlockForAll = document.querySelector('.main_block_for_all')
         const regBlock = document.getElementById('registratioBlock')
-        const emailInput = document.getElementById('regAndlog_input').value
+        regBlock.classList.add('invalidRegForm')
+        return mainBlockForAll.innerHTML=`
+        <div class="block_for_all_loading_animation" id="loadingBlock">
+        <div class="loading_main">
+        <div class="block_for_loading_animation">
+          <video class="loading_animation" height="auto" autoplay="" muted="" playsinline="" loop="">
+            <source src="./img/loading_animation.webm" type="video/webm">
+            Logo don't opened
+          </video>
+        </div>
+        </div>
+         </div>
+        `
+       
+    }
+     //--------------------- Function about Offer to Confirm Email -----------------------------------------------------
+     offerToConfirmEmail = async (createdEmail)=>{
+        const mainBlockForAll = document.querySelector('.main_block_for_all')
+        const regBlock = document.getElementById('loadingBlock')
         regBlock.classList.add('invalidRegForm')
         mainBlockForAll.innerHTML=`
        <div class="offerToConfirm_main_block">
@@ -19,7 +61,7 @@
               </div>
             </div>
             <div class="otc_block_for_text">
-            <p class="otc_sub_text">We have sent email to <span class="otc_email_text">${emailInput}</span> to confirm the validity of your email address. After receiving the email follow the link provided complete your registration </p>
+            <p class="otc_sub_text">We have sent email to <span class="otc_email_text">${createdEmail}</span> to confirm the validity of your email address. After receiving the email follow the link provided complete your registration </p>
             <p class="otc_sub_text_02">Once you confirm your email, your account will be activated</p>
             </div>
             <div class="block_for_line">
@@ -55,6 +97,9 @@
                         timerHtml.remove()
                     }
                  }, 1000)
+                 // here function sendemail
+                  this.resentEmail(createdEmail)
+
             })
         
         return
@@ -82,7 +127,7 @@
         }
     }
     //---------------------- Function to control Sign Up answer of status code from back end ------------------------
-    statusSignUpController = (status)=>{
+    statusSignUpController = (status, createdEmail)=>{
         if(!status){
             console.log(`Status controller have not status receive`)
             return
@@ -90,8 +135,7 @@
         const loginAnswer = document.querySelector(`.block_for_answer_reg`)
         switch(status) {
             case 201: 
-            this.offerToConfirmEmail();
-                // loginAnswer.innerHTML=`<h1 class="answer_text">You have successfully registered</h1>`
+            this.offerToConfirmEmail(createdEmail);
                 break;
             case 400:
                 loginAnswer.innerHTML=`<h1 class="answer_text">Please check the correctness of the entered data</h1>`
@@ -135,7 +179,12 @@
                 },
                 body: JSON.stringify(obj)
             })
-            this.statusSignUpController(sendingData.status)
+            const responseData = await sendingData.json();
+            if(!responseData.createdEmail){
+                console.log(`No email arrived from the server`)
+                return      
+            }
+            this.statusSignUpController(sendingData.status, responseData.createdEmail)
 
         }catch(err){
             console.log(`Internal sevrver error`)

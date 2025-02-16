@@ -206,7 +206,7 @@ class Controller {
             console.log(`Email are required`)
             return res.status(400).json();
         }
-        const userInf = await pool.query(`SELECT evtoken_id FROM "Users" WHERE email = $1`,[email])
+        const userInf = await pool.query(`SELECT username, evtoken_id FROM "Users" WHERE email = $1`,[email])
         if(userInf.rowCount===0){
             console.log(`We have not this email in database`)
             return

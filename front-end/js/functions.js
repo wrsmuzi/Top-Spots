@@ -12,12 +12,6 @@
                 },
                 body: JSON.stringify(obj)
             })
-            // const responseData = await sentEmail.json();
-            // if(!responseData.createdEmail){
-            //     console.log(`No email arrived from the server`)
-            //     return      
-            // }
-
         }catch(err){
             console.log(`Internal sevrver error`)
             throw new Error(`Problem with server: ${err.statusText}`)
@@ -49,31 +43,32 @@
         const regBlock = document.getElementById('loadingBlock')
         regBlock.classList.add('invalidRegForm')
         mainBlockForAll.innerHTML=`
-       <div class="offerToConfirm_main_block">
-         <div class="offerToConfirm_sub_block">
-            <div class="otc_block_for_img_01">
-                <img class="otc_header_img" src="../img/email-6370595_1280.jpg" alt="">
-            </div>
-            <h1 class="otc_header_text">Email Confirmation</h1>
-            <div class="block_for_center_img">
-              <div class="otc_block_for_img_02">
-                <img class="otc_center_img" src="../img/mail-2048128_640.png" alt="">
-              </div>
-            </div>
-            <div class="otc_block_for_text">
-            <p class="otc_sub_text">We have sent email to <span class="otc_email_text">${createdEmail}</span> to confirm the validity of your email address. After receiving the email follow the link provided complete your registration </p>
-            <p class="otc_sub_text_02">Once you confirm your email, your account will be activated</p>
-            </div>
-            <div class="block_for_line">
-            <div class="otc_line"></div>
-            </div>
-            <p class="otc_ask_for_resent">If you haven't received any emails from us</p>
-            <div class="block_for_timer"></div>
-            <div class="otc_block_for_btn">
+           <div class="offerToConfirm_main_block">
+             <div class="offerToConfirm_sub_block">
+               <div class="otc_block_for_img_01">
+                 <img class="otc_header_img" src="../img/email-6370595_1280.jpg" alt="">
+               </div>
+               <h1 class="otc_header_text">Email Confirmation</h1>
+               <div class="block_for_center_img">
+                 <div class="otc_block_for_img_02">
+                   <img class="otc_center_img" src="../img/mail-2048128_640.png" alt="">
+                 </div>
+               </div>
+             <div class="otc_block_for_text">
+               <p class="otc_sub_text">We have sent email to <span class="otc_email_text">${createdEmail}</span> to confirm the validity of your email address. After receiving the email follow the link provided complete your registration </p>
+               <p class="otc_sub_text_02">Once you confirm your email, your account will be activated</p>
+             </div>
+             <div class="block_for_line">
+               <div class="otc_line"></div>
+             </div>
+             <p class="otc_ask_for_resent">If you haven't received any emails from us</p>
+             <div class="block_for_timer"></div>
+             <div class="otc_block_for_btn">
                <button class="otc_btn" id="otcResendEmail">Resend Email</button>
+             </div>
             </div>
-          </div>
-        </div>`
+           </div>`
+  
         
             const resentBtn = document.getElementById('otcResendEmail')
             if(!resentBtn){

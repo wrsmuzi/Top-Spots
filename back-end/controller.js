@@ -12,6 +12,7 @@ require('dotenv').config({ path: path.resolve(__dirname, './privateInf.env') });
 class Controller {
 
     pageMain = path.join(__dirname, '../Front-end/html/index.html') 
+    pageNewMain = path.join(__dirname, '../Front-end/html/newindex.html') 
     pageError = path.join(__dirname, '../front-end/html/error.html')
     pageAuth = path.join(__dirname, '../front-end/html/authentication.html')
     pageEmailConfirmation = path.join(__dirname,'../front-end/html/email_confirmation.html' )
@@ -28,6 +29,22 @@ class Controller {
                     return res.status(404).json()
                 }
                 console.log(`Main page successfully opened`)
+                res.status(200)      
+            })
+        }catch(err){
+            console.log(`Problem with server or bad request: ${err}`)
+            res.status(500).json()
+        }
+    }
+    //Open New Main page
+    openNewMainPage = (req, res)=>{
+        try{
+            res.sendFile(this.pageNewMain,(err)=>{
+                if(err){
+                    console.log(`Problem with sending New Main page: ${err}`)
+                    return res.status(404).json()
+                }
+                console.log(`New Main page successfully opened`)
                 res.status(200)      
             })
         }catch(err){
@@ -115,12 +132,98 @@ class Controller {
     // Email Letter Html content
     emailLetterContent = (username, token) =>{
         return `
-            <div style="font-family: Arial, sans-serif; text-align: center; padding: 20px;">
-                <h2>Привіт, ${username}!</h2>
-                <p>Дякуємо за реєстрацію. Натисніть на посилання нижче, щоб підтвердити вашу електронну адресу:</p>
-                <a href="http://localhost:3500/api/verify-email?token=${token}">Підтвердити ваш емайл</a>
-                <p>Якщо ви не реєструвалися, просто ігноруйте цей лист.</p>
-            </div>`;
+             <div style="width: 100%; height: 100%;">
+              <table role="presentation" cellspacing="0" cellpadding="0" align="center" style="width: 100%;">
+                <tr align="center" style="background-color: #000;">
+                    <td>
+                       <div style="width: 25%; height: 20%;">
+                           <img src="https://imgur.com/r43Fdc9.png" alt="" style="width: 100%; height: 100%;">
+                        </div>
+                    </td>
+                </tr>
+                <tr align="center" style="background: linear-gradient(to right, #010425, #210275);">
+                   <td>
+                        <div style="width: 100px; height: 100px;">
+                           <img src="https://imgur.com/LwI45Wj.png" alt="" style="width: 100%; height: 100%;">
+                        </div>
+                   </td>
+                 </tr>
+                 <tr >
+                    <td style="padding: 0px 5% 8% 5%; color: #000;" >
+                       <table> 
+                             <tr align="center" style="font-size: 25px">
+                                <td>
+                                   <h2>Email Confirmation</h2>
+                                </td>
+                             </tr>
+                             <tr>
+                                <td >
+                                   <p style="font-size: 20px; letter-spacing: 1.5px; color: #000;">Hi <span style="color:rgb(22, 0, 80);">${username}</span>, <br> <span style="font-size: 20px; letter-spacing: 1.5px; color: #000;">you're almost set to start enjoying our service. Simply click the link below to verify your email address and get started. The link expires in 24 hours.</span></p>
+                                </td>
+                             </tr>
+                             <tr align="center">
+                                <td style="padding: 15px 0px;">
+                                   <a href="http://localhost:3500/api/verify-email?token=${token}"  style="background: linear-gradient(to right, #010425, #210275); padding: 1.5% 3.5%; letter-spacing: 2px; color:#eeeeee; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; font-size: 20px; font-weight: 550; text-decoration: none;">Verify my Email</a>
+                                </td>
+                             </tr>
+                             <tr>
+                                <td style="padding-top: 10px;">
+                                <p style="font-size: 18px; letter-spacing: 1.5px; font-weight: 500;">If you did not request this email verification, please ignore this message. No further action is required.</p>
+                                </td>
+                             </tr>
+                             <tr align="center">
+                                <td align="center" style="font-size: 14px; color: #666; padding-top: 40px;">
+                                  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+                                    <tr>
+                                       <td width="40%">
+                                       <div style="width: 100%; height: 3px; background: linear-gradient(to left,rgb(156, 154, 154),rgb(255, 255, 255));"></div>
+                                       </td>
+                                       <td align="center" style="width: 20%; font-weight: 500; font-size: 18px; color: #000; letter-spacing: 2px; padding: 0 5px; white-space: nowrap;">Social Media</td>
+                                       <td width="40%">
+                                       <div style="width: 100%; height: 3px; background: linear-gradient(to right,rgb(156, 154, 154),rgb(255, 255, 255));"></div>
+                                       </td>
+                                    </tr>
+                                  </table>
+                                </td>
+                             </tr>
+                            <tr align="center">
+                              <td style="padding-top: 10px;">
+                                 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+                                    <tr>
+                                       <td align="center" width="10%" style="text-align: right;">
+                                          <a href="https://www.facebook.com/" target="_blank" >
+                                            <img src="https://imgur.com/3LjMEoc.png" alt="Facebook" width="25" height="25" style="display: block;  border-radius: 45px; margin-left: auto;">
+                                          </a>
+                                       </td>
+                                       <td align="center" width="10%">
+                                         <a href="https://www.youtube.com/" target="_blank">
+                                           <img src="https://imgur.com/PATYsSx.png" alt="YouTube" width="25" height="25" style="display: block;  border-radius: 45px;">
+                                         </a>
+                                       </td>
+                                       <td align="center" width="10%" style="text-align: left;">
+                                         <a href="https://www.instagram.com/" target="_blank">
+                                           <img src="https://imgur.com/NqwvKkM.png" alt="Tik Tok" width="25" height="25" style="display: block; border-radius: 45px; margin-right: auto;">
+                                         </a>
+                                       </td>
+                                    </tr>
+                                 </table>
+                              </td>
+                            </tr>
+                            <tr>
+                               <td align="center">
+                                  <p style="font-size: 16px; letter-spacing: 1px; color: #000;">Follow our social media for updates and great offers</p>
+                               </td>
+                            </tr>
+                             <tr>
+                               <td align="center" style="background-color: #000; padding: 10px 10px;">
+                                  <p style="font-size: 15px; letter-spacing: 1px; color: #fff; font-weight: 600; margin: 0px;">Top Spots</p>
+                                  <p style="font-size: 12px; letter-spacing: 1px; color: rgb(230, 188, 4); margin: 0px;">Discover The best Around You</p>
+                               </td>
+                            </tr>
+                       </table>
+                    </td>
+                 </tr>
+              </table>`;
     }
     // Creating JWT Token and sending to Data BASE
     creatingJwtToken = async (evtoken_id) =>{
@@ -182,12 +285,11 @@ class Controller {
                     sameSite: "Strict", // Defend from CSRF
                     maxAge: 7 * 24 * 60 * 60 * 1000 // Alive time
             })
-            res.cookie("accessToken",accessToken,{
+            res.cookie("accessToken", accessToken,{
                 httpOnly: true,     // Defend from XSS
                 secure: true,       // Only  HTTPS
                 sameSite: "Strict", // Defend from CSRF
                 maxAge: 15 * 60 * 1000  // Alive time
-
             })
         
             // res.status(200).json({accessToken})

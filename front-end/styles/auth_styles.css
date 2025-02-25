@@ -565,3 +565,52 @@ input[type="checkbox"] {
 }
 .loading_text {
 }
+
+
+
+
+-----------------------------------------------
+
+
+.email_letter_wrapper {
+    width: 100%;
+    height: 100%;
+}
+.email_block_01 {
+    display: flex;
+    flex-direction: column;
+
+}
+.email_block_for_logo_01 {
+    width: 100%;
+    background-color: #000;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+.email_logo_01 {
+    width: 20%;
+    height: 50%;
+}
+.elogo_01 {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.email_block_for_logo_02 {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    background: linear-gradient(to right, #010425, #210275);
+}
+.email_logo_02 {
+    width: 20%;
+    height: 50%;
+    border-radius: 45px;
+}
+.elogo_02 {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}

@@ -24,6 +24,7 @@
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "path": "^0.12.7",
-    "pg": "^8.13.1"
+    "pg": "^8.13.1",
+    "supabase": "^2.15.8"
   }
 }

@@ -16,7 +16,8 @@ router.post('/api/logIn',controller.logIn)
 
 router.get('/api/logIn',controller.logIn)
 
-router.use('/new-main', controller.openNewMainPage)
+router.get('/new-main', controller.checkValidityAccessToken)
+router.get('/new-main', controller.openNewMainPage)
 
 
 module.exports = router

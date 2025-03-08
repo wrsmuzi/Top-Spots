@@ -1,5 +1,6 @@
 //----------------  Class with functions for auth_fr.js --> authentication.html  -----------------------------------------
  class authFunctionsHandler {
+
     resentEmail = async (email) =>{
         const obj = {
             email
@@ -19,29 +20,28 @@
     }
 
     
-    loadingAnimation = ()=>{
-        const mainBlockForAll = document.querySelector('.main_block_for_all')
+    loadingRegAnimation = () =>{
         const regBlock = document.getElementById('registratioBlock')
-        regBlock.classList.add('invalidRegForm')
-        return mainBlockForAll.innerHTML=`
-        <div class="block_for_all_loading_animation" id="loadingBlock">
-        <div class="loading_main">
-        <div class="block_for_loading_animation">
-          <video class="loading_animation" height="auto" autoplay="" muted="" playsinline="" loop="">
-            <source src="./img/loading_animation.webm" type="video/webm">
-            Logo don't opened
-          </video>
-        </div>
-        </div>
-         </div>
-        `
-       
+        const loadingBlock = document.querySelector('.block_for_all_loading_animation')
+        regBlock.classList.remove('validRegLogForm') 
+        regBlock.classList.add('invalidRegLogForm') 
+        loadingBlock.classList.remove('inactive_loading_block')
+        loadingBlock.classList.add('active_loading_block')
+    }
+    loadingLogAnimation = () =>{
+        const logBlock = document.getElementById('loginBlock')
+        const loadingBlock = document.querySelector('.block_for_all_loading_animation')
+        logBlock.classList.remove('validRegLogForm') 
+        logBlock.classList.add('invalidRegLogForm') 
+        loadingBlock.classList.remove('inactive_loading_block')
+        loadingBlock.classList.add('active_loading_block')
+         
     }
      //--------------------- Function about Offer to Confirm Email -----------------------------------------------------
      offerToConfirmEmail = async (createdEmail)=>{
         const mainBlockForAll = document.querySelector('.main_block_for_all')
-        const regBlock = document.getElementById('loadingBlock')
-        regBlock.classList.add('invalidRegForm')
+        const loadingBlock = document.getElementById('loadingBlock')
+        loadingBlock.classList.add('invalidRegForm')
         mainBlockForAll.innerHTML=`
            <div class="offerToConfirm_main_block">
              <div class="offerToConfirm_sub_block">
@@ -99,50 +99,99 @@
         
         return
     }
+    //---------------------------Function for Creating Answer from Server in Registration form------------------------
+    answerRegError = async (errorText) =>{
+        const loadingBlock = document.getElementById('loadingBlock');
+        const regBlock = document.getElementById('registratioBlock');
+        const answerBlock = document.querySelector('.block_for_answer_reg');
+
+        if (!loadingBlock || !regBlock || !answerBlock) {
+            console.error("One of this element is not exist");
+            return;
+        }
+
+        answerBlock.innerHTML = "";
+
+        loadingBlock.classList.remove('active_loading_block');
+        loadingBlock.classList.add('inactive_loading_block');
+        regBlock.classList.remove('invalidRegLogForm');
+        regBlock.classList.add('validRegLogForm');
+
+        answerBlock.innerHTML = errorText;
+    }
+    //---------------------------Function for Creating Answer from Server in Login form------------------------
+    answerLogError = async (errorText) =>{
+        const loadingBlock = document.getElementById('loadingBlock');
+        const loginBlock = document.getElementById('loginBlock');
+        const answerBlock = document.querySelector('.block_for_answer_log');
+
+        if (!loadingBlock || !loginBlock || !answerBlock) {
+            console.error("One of this element is not exist");
+            return;
+        }
+
+        answerBlock.innerHTML = "";
+
+        loadingBlock.classList.remove('active_loading_block');
+        loadingBlock.classList.add('inactive_loading_block');
+        loginBlock.classList.remove('invalidRegLogForm');
+        loginBlock.classList.add('validRegLogForm');
+
+        answerBlock.innerHTML = errorText;
+    }
     //---------------------- Function to control Log In answer of status code from back end -----------------------------
     statusLogInController = (status)=>{
         if(!status){
             console.log(`Status controller have not status receive`)
             return
         }
-        const loginAnswer = document.querySelector(`.block_for_answer_log`)
+    //---------Error Text HTML----------------------  
+        const success200 = `<h1 class="answer_text">You have successfully logged in</h1>`
+        const wrongLogOrErrError401 = `<h1 class="answer_text">Wrong login or password</h1>`
+        const tooManyRequestsError429 = `<h1 class="answer_text">Too many requests, please try again later</h1>`
+        const unknowProblemErrorDef = `<h1 class="answer_text">An error occurred, we are working on it</h1>`
+
         switch(status) {
             case 200: 
-                loginAnswer.innerHTML=`<h1 class="answer_text">You have successfully logged in</h1>`
+                this.answerLogError(success200);
                 break;
             case 401:
-                loginAnswer.innerHTML=`<h1 class="answer_text">Wrong login or password</h1>`
+                this.answerLogError(wrongLogOrErrError401);
                 break;
             case 429:
-                loginAnswer.innerHTML=`<h1 class="answer_text">Too many requests, please try again later</h1>`
+                this.answerLogError(tooManyRequestsError429);
                  break;
             default:
-                loginAnswer.innerHTML=`<h1 class="answer_text">An error occurred, we are working on it</h1>`
+                this.answerLogError(unknowProblemErrorDef);
                 break;
         }
     }
     //---------------------- Function to control Sign Up answer of status code from back end ------------------------
     statusSignUpController = (status, createdEmail)=>{
         if(!status){
-            console.log(`Status controller have not status receive`)
-            return
+            return console.log(`Status controller have not status receive`)
         }
-        const loginAnswer = document.querySelector(`.block_for_answer_reg`)
+    //---------Error Text HTML----------------------  
+        const correctnessError400 = `<h1 class="answer_text">Please check the correctness of the entered data</h1>`
+        const existUserError409 = `<h1 class="answer_text">Registration failed, check your details</h1>`
+        const tooManyRequestsError429 = `<h1 class="answer_text">Too many requests, please try again later</h1>`
+        const unknowProblemErrorDef = `<h1 class="answer_text">An error occurred, we are working on it</h1>`
+  
         switch(status) {
             case 201: 
-            this.offerToConfirmEmail(createdEmail);
+                this.offerToConfirmEmail(createdEmail);
                 break;
             case 400:
-                loginAnswer.innerHTML=`<h1 class="answer_text">Please check the correctness of the entered data</h1>`
+                this.answerRegError(correctnessError400);
                 break;
             case 409:
-                loginAnswer.innerHTML=`<h1 class="answer_text">Registration failed, please try again</h1>`
+                this.answerRegError(existUserError409);
                 break;
             case 429:
-                loginAnswer.innerHTML=`<h1 class="answer_text">Too many requests, please try again later</h1>`
-                 break;
+                this.answerRegError(tooManyRequestsError429);
+                break;
             default:
-                loginAnswer.innerHTML=`<h1 class="answer_text">An error occurred, we are working on it</h1>`
+                this.answerRegError(unknowProblemErrorDef);
                 break;
         }
     }
@@ -176,8 +225,8 @@
             })
             const responseData = await sendingData.json();
             if(!responseData.createdEmail){
-                console.log(`No email arrived from the server`)
-                return      
+                return console.log(`No email arrived from the server`)
+                    
             }
             this.statusSignUpController(sendingData.status, responseData.createdEmail)
 

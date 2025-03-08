@@ -19,6 +19,7 @@ loginForm.addEventListener('submit', async (event)=>{
         const loginAnswer = document.querySelector('.block_for_answer_log')
         return loginAnswer.innerHTML=`<h1 class="answer_text">Login and password are required</h1>` 
     }
+    Functions.loadingLogAnimation()
     const sendingData = await Functions.sendLogIn(inputValues);
 })
 
@@ -40,7 +41,7 @@ signUpForm.addEventListener('submit', async(event)=>{
         const signupAnswer = document.querySelector('.block_for_answer_reg')
         return signupAnswer.innerHTML=`<h1 class="answer_text">Usernaame, login and password are required</h1>`
     }
-    Functions.loadingAnimation()
+    Functions.loadingRegAnimation()
     const sendingData = await Functions.sendSignUp(inputValues)
 })
 //------------------------------------ Move Login/Register form-----------------------------------------------

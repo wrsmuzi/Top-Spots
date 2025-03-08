@@ -3,8 +3,10 @@ const app = express()
 const path = require('path')
 const router = require('./router.js')
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 require('dotenv').config({ path: path.resolve(__dirname, './privateInf.env') });
 
+app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../Front-end')));
 app.use(express.json())
 

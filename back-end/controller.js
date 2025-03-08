@@ -105,6 +105,40 @@ class Controller {
     }
 
 
+    // Creating JWT Token and sending to Data BASE
+    creatingJwtAccRefTokens = async (username, email) =>{
+            try{
+                const payload = {
+                    username,
+                    email
+                }
+                const accessToken = jwt.sign(payload, process.env.ACCESSJWTTOKEN, { expiresIn: "15m" })
+                const refreshToken = jwt.sign(payload, process.env.REFRESHJWTTOKEN, { expiresIn: "7d" })
+                const saveToken = await pool.query(`
+                    INSERT INTO "JWTRefreshToken" (refresh_token) 
+                    VALUES ($1) 
+                    ON CONFLICT (refresh_token) 
+                    DO UPDATE SET refresh_token = EXCLUDED.refresh_token 
+                    RETURNING reftoken_id`,[refreshToken])
+                if (saveToken.rowCount === 0) {
+                    console.log(`Refresh Token have not saved in Database`);
+                    return { refreshToken: null, accessToken: null };  
+                }
+                const refTokenId = saveToken.rows[0].reftoken_id;
+                const updateRefToken = await pool.query(`UPDATE "Users" SET reftoken_id = $1 WHERE email = $2 RETURNING user_id`,[refTokenId, email])
+                if(updateRefToken.rowCount===0){
+                    return console.log(`Refresh Token have not updated in Users table`)
+                }
+                console.log(`Refresh Token is saved in Database`)
+                return { refreshToken, accessToken }
+    
+            }catch(err){
+                console.log(`Error with creating JWT tokens: ${err}`)
+                return
+            }
+    }
+
+
     //Sending Email
     sendingEmail = async (to, subject, htmlEmailContent) => {
         try {
@@ -225,31 +259,6 @@ class Controller {
                  </tr>
               </table>`;
     }
-    // Creating JWT Token and sending to Data BASE
-    creatingJwtToken = async (evtoken_id) =>{
-        const userInf = await pool.query(`SELECT username, email  FROM "Users" WHERE evtoken_id = $1`,[evtoken_id]);
-        const username = userInf.rows[0].username
-        const email = userInf.rows[0].email
-        const payload = {
-            username,
-            email
-        }
-        const accessToken = jwt.sign(payload, process.env.ACCESSJWTTOKEN, { expiresIn: "15m" })
-        const refreshToken = jwt.sign(payload, process.env.REFRESHJWTTOKEN, { expiresIn: "7d" })
-        const saveToken = await pool.query(`INSERT INTO "JWTRefreshToken" (refresh_token) VALUES ($1) RETURNING reftoken_id`,[refreshToken])
-        if (saveToken.rowCount === 0) {
-            console.log(`Refresh Token have not saved in Database`);
-            return { refreshToken: null, accessToken: null };  
-        }
-        const refTokenId = saveToken.rows[0].reftoken_id;
-        const updateRefToken = await pool.query(`UPDATE "Users" SET reftoken_id = $1 WHERE evtoken_id = $2 RETURNING user_id`,[refTokenId, evtoken_id])
-        if(updateRefToken.rowCount===0){
-            return console.log(`Refresh Token have not updated in Users table`)
-        }
-        console.log(`Refresh Token is saved in Database`)
-        return { refreshToken, accessToken }
-    }
-
     //Email Varification
     emailVerify = async (req, res) =>{
         try{
@@ -258,7 +267,7 @@ class Controller {
                 console.log(`EVToken is failed, can't to verify email`)
                 return
             }
-            const checkToken = await pool.query(`SELECT evtoken_id FROM "EVToken" where ev_token=$1`,[token])
+            const checkToken = await pool.query(`SELECT evtoken_id FROM "EVToken" where ev_token = $1`,[token])
             if(checkToken.rowCount===0){
                 console.log(`Database has no this token, so wew can't conform email`)
                 return
@@ -266,15 +275,18 @@ class Controller {
             const chekedTokenId = checkToken.rows[0].evtoken_id
             console.log(`Token id: ${chekedTokenId}`)
 
-            const isVerified = await pool.query(`UPDATE "Users" SET is_verified = true WHERE evtoken_id = $1 RETURNING is_verified`,[chekedTokenId])
+            const isVerified = await pool.query(`UPDATE "Users" SET is_verified = true WHERE evtoken_id = $1 RETURNING is_verified, email, username`,[chekedTokenId])
             if(isVerified.rowCount===0){
                 console.log(`Problem with updating isVerified`)
                 return
             }
-            console.log(`Verification is completed`)
             const verificationStatus = isVerified.rows[0].is_verified
+            console.log(`Verification is completed, is Verified = ${verificationStatus}`)
+            
+            const username = isVerified.rows[0].username
+            const  email = isVerified.rows[0].email
     
-            const { refreshToken, accessToken} =  await this.creatingJwtToken(chekedTokenId)
+            const {refreshToken, accessToken} =  await this.creatingJwtAccRefTokens(username, email)
             if (!refreshToken || !accessToken) {
                     console.log(`Error: JWT tokens were not created properly`);
                     return res.status(500).json({ error: "JWT token generation failed" });
@@ -302,6 +314,7 @@ class Controller {
             res.status(500).json()
         }
     }
+    // Resent email btn 
     resentEmail = async (req, res) =>{
         const {email}=req.body
         if(!email){
@@ -327,9 +340,6 @@ class Controller {
         res.status(201).json({"createdEmail":email})
     }
 
-    
-
-
     //Registration
     signUp = async (req, res) =>{
         const{username, email, password}=req.body
@@ -342,7 +352,7 @@ class Controller {
         const existUser = await pool.query(`SELECT * FROM "Users" WHERE email = ($1)`,[email])
         if(existUser.rowCount>0){
             console.log(`User with this email or phone number ${existUser.rows[0].email} are already exist,`)
-            return res.status(409).json()
+            return res.status(409).json({"createdEmail":"error@gmail.com"})
         }
         try{
             const hashedPassword = await bcrypt.hash(password, saltLvl)
@@ -373,7 +383,6 @@ class Controller {
             res.status(500).json()  
         }
     }
-
     //Log in 
     logIn = async (req, res)=>{
         const{email, password}=req.body
@@ -393,12 +402,112 @@ class Controller {
                 console.log(`User have entered wrong password`)
                 return res.status(401).json()
             }
+            const {refreshToken, accessToken}= await this.creatingJwtAccRefTokens(user.username, user.email)
+            if (!refreshToken || !accessToken) {
+                console.log(`Error: JWT tokens were not created properly`)
+                return res.status(500).json({ error: "JWT token generation failed" })
+            }
+
+            res.cookie("refreshToken", refreshToken,{
+                httpOnly: true,     // Defend from XSS
+                secure: true,       // Only  HTTPS
+                sameSite: "Strict", // Defend from CSRF
+                maxAge: 7 * 24 * 60 * 60 * 1000 // Alive time
+            })
+            res.cookie("accessToken", accessToken,{
+            httpOnly: true,     // Defend from XSS
+            secure: true,       // Only  HTTPS
+            sameSite: "Strict", // Defend from CSRF
+            maxAge: 15 * 60 * 1000  // Alive time
+            })
+
+
+
+
+
+
             console.log(`User with this email ${email} successfully logged in`)
             return res.status(200).json()
 
         }catch(err){
             console.log(`Problem with server, cause: ${err}`)
             return res.status(500).json()
+        }
+    }
+
+
+    //Middleware to check Validity Access and Refresh Tokens
+    checkValidityAccessToken = async (req, res, next) =>{
+        try{
+            const accessToken = req.cookies.accessToken
+            if(!accessToken){
+                console.log(`Access token is not defined`)
+                return  res.status(401).json({ message: 'Access token missing'});
+            }
+            jwt.verify(accessToken, process.env.ACCESSJWTTOKEN, (err, decoded) =>{
+                if(err){
+                    console.log(`The Access Token is not valid`)
+                    return this.refreshAccessToken(req, res)}
+                const { username, email } = decoded;
+                req.username = username;
+                req.email = email;
+                console.log(`The Access Token is valid`)
+                next();   
+            })
+        }catch(err){
+            console.log(`Problem with cheking validity of access token: ${err.message}`)
+            res.status(500).json()
+        }
+    } 
+
+
+    //Refresh Access and Refresh tokens
+    refreshAccessToken = async (req, res) =>{
+        try{
+            //Get Refresh Token from Cookies
+            const refreshToken = req.cookies.refreshToken
+            if(!refreshToken){
+                console.log(`Refresh token is missing in cookies`)
+                return  res.status(401).json({ message: 'Refresh token missing' });
+            }
+            //Decoding Token to get Info about User 
+            let decodedRefreshToken
+            try{
+                decodedRefreshToken = jwt.verify(refreshToken, process.env.REFRESHJWTTOKEN)
+            }catch(err){
+                console.log(`Decoding users refresh token is failed: ${err}`)
+                return res.redirect('/checkUser');
+            }
+            const { username, email } = decodedRefreshToken
+            console.log(`Refresh token decoded successfully for user: ${username}, email: ${email}`)
+            
+            //Check if this RefreshToken exists in the Database
+            const checkTokenPayload = await pool.query(`
+            SELECT jt.reftoken_id 
+            FROM "JWTRefreshToken" jt 
+            JOIN "Users" u 
+            ON U.reftoken_id = jt.reftoken_id 
+            WHERE u.email = $1 AND jt.refresh_token = $2`,[email, refreshToken])
+
+            //If Refresh Token is not in database or invalid, we redirect to login
+            if(checkTokenPayload.rowCount===0){
+                console.log(`Invalid or expired refresh token for user: ${username}, email: ${email}`)
+                return res.redirect('/checkUser');
+            }
+
+            //Creating ans sending Access Token to user
+            const accessToken = jwt.sign(decodedRefreshToken, process.env.ACCESSJWTTOKEN, { expiresIn: "15m" })
+            console.log(`New Access Token generated for user: ${username}, email: ${email}`)
+            res.cookie("accessToken", accessToken,{
+                httpOnly: true,     // Defend from XSS
+                secure: true,       // Only  HTTPS
+                sameSite: "Strict", // Defend from CSRF
+                maxAge: 15 * 60 * 1000  // Alive time
+                })
+            res.status(200).json({ message: "Access token refreshed" })
+        }catch(err) {
+            console.error(`Problem with Refreshing Access or Refresh Tokens: ${err.message}`);
+            res.status(500).json({ message: "Problem with Refreshing Tokens", error: err.message });
         }
     }
 }

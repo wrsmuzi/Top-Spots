@@ -1,4 +1,5 @@
-/*Обнуління*/
+
+
 *{padding: 0;margin: 0;border: 0;}
 *,*:before,*:after{-moz-box-sizing: border-box;-webkit-box-sizing: border-box;box-sizing: border-box;}
 :focus,:active{outline: none;}
@@ -261,9 +262,6 @@ margin-left: 50px;
 }
 .main-categories__block {
 }
-
-
-
 
 
 /* Styles for the registration menu */
@@ -598,7 +596,3 @@ padding-top: 3%;
 .menu a:hover {
   background: #f0f0f0;
 }
-
-
-
-

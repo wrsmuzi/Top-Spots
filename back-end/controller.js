@@ -5,18 +5,16 @@ const crypto = require('crypto')
 const pool = require('./database') 
 const nodemailer = require('nodemailer')
 const jwt = require('jsonwebtoken')
+const supabase = require('./database.js')
 require('dotenv').config({ path: path.resolve(__dirname, './privateInf.env') });
 
 
 
 class Controller {
-
     pageMain = path.join(__dirname, '../Front-end/html/index.html') 
     pageError = path.join(__dirname, '../front-end/html/error.html')
     pageAuth = path.join(__dirname, '../front-end/html/authentication.html')
     pageEmailConfirmation = path.join(__dirname,'../front-end/html/email_confirmation.html' )
-
-
 
 
     //Open Main page
@@ -124,7 +122,7 @@ class Controller {
     }
     // Creating JWT Token and sending to Data BASE
     creatingJwtToken = async (evtoken_id) =>{
-        const userInf = await pool.query(`SELECT username, email  FROM "Users" WHERE evtoken_id = $1`,[evtoken_id]);
+        const userInf = await supabase.query(`SELECT username, email  FROM "Users" WHERE evtoken_id = $1`,[evtoken_id]);
         const username = userInf.rows[0].username
         const email = userInf.rows[0].email
         const payload = {
@@ -155,7 +153,7 @@ class Controller {
                 console.log(`EVToken is failed, can't to verify email`)
                 return
             }
-            const checkToken = await pool.query(`SELECT evtoken_id FROM "EVToken" where ev_token=$1`,[token])
+            const checkToken = await supabase.query(`SELECT evtoken_id FROM "EVToken" where ev_token=$1`,[token])
             if(checkToken.rowCount===0){
                 console.log(`Database has no this token, so wew can't conform email`)
                 return
@@ -163,7 +161,7 @@ class Controller {
             const chekedTokenId = checkToken.rows[0].evtoken_id
             console.log(`Token id: ${chekedTokenId}`)
 
-            const isVerified = await pool.query(`UPDATE "Users" SET is_verified = true WHERE evtoken_id = $1 RETURNING is_verified`,[chekedTokenId])
+            const isVerified = await supabase.query(`UPDATE "Users" SET is_verified = true WHERE evtoken_id = $1 RETURNING is_verified`,[chekedTokenId])
             if(isVerified.rowCount===0){
                 console.log(`Problem with updating isVerified`)
                 return
@@ -206,7 +204,7 @@ class Controller {
             console.log(`Email are required`)
             return res.status(400).json();
         }
-        const userInf = await pool.query(`SELECT username, evtoken_id FROM "Users" WHERE email = $1`,[email])
+        const userInf = await supabase.query(`SELECT username, evtoken_id FROM "Users" WHERE email = $1`,[email])
         if(userInf.rowCount===0){
             console.log(`We have not this email in database`)
             return
@@ -237,7 +235,7 @@ class Controller {
             console.log(`Username, Login and password are required`)
             return res.status(400).json();
         }
-        const existUser = await pool.query(`SELECT * FROM "Users" WHERE email = ($1)`,[email])
+        const existUser = await supabase.query(`SELECT * FROM "Users" WHERE email = ($1)`,[email])
         if(existUser.rowCount>0){
             console.log(`User with this email or phone number ${existUser.rows[0].email} are already exist,`)
             return res.status(409).json()
@@ -248,7 +246,7 @@ class Controller {
             
             //Creating Email Verification Token
             const EmailVereficationToken = crypto.randomBytes(32).toString('hex')
-            const creatingEVToken = await pool.query('INSERT INTO "EVToken" (ev_token) VALUES ($1) RETURNING evtoken_id', [EmailVereficationToken])
+            const creatingEVToken = await supabase.query('INSERT INTO "EVToken" (ev_token) VALUES ($1) RETURNING evtoken_id', [EmailVereficationToken])
             const EVToken = creatingEVToken.rows[0]?.evtoken_id || null;
             if (!EVToken) {
                 console.log("Error creating evtoken");
@@ -256,7 +254,7 @@ class Controller {
                 return;
             }
             //Creating/Sending User and EVToken in database
-            const creatingUser = await pool.query(`INSERT INTO "Users" (username, email, password, evtoken_id) VALUES ($1, $2, $3, $4) RETURNING user_id`,[username, email, hashedPassword, EVToken])
+            const creatingUser = await supabase.query(`INSERT INTO "Users" (username, email, password, evtoken_id) VALUES ($1, $2, $3, $4) RETURNING user_id`,[username, email, hashedPassword, EVToken])
             if(creatingUser.rowCount===0){
                 console.log(`Problem with creating user or evtoken in Database`)
                 res.status(400).json()
@@ -280,7 +278,7 @@ class Controller {
             return res.status(400).json()
         }
         try{
-            const dataBaseUserInf = await pool.query(`SELECT * FROM "Users" WHERE email = ($1)`,[email])
+            const dataBaseUserInf = await supabase.query(`SELECT * FROM "Users" WHERE email = ($1)`,[email])
             if(dataBaseUserInf.rowCount===0){
                 console.log(`User with this email ${email} is not exist`)
                 return res.status(401).json()

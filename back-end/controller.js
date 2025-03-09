@@ -2,17 +2,16 @@ const express = require('express')
 const path = require('path')
 const bcrypt = require('bcrypt')
 const crypto = require('crypto')
-const pool = require('./database') 
 const nodemailer = require('nodemailer')
 const jwt = require('jsonwebtoken')
-const supabase = require('./database.js')
+const supabase = require('./database')
 require('dotenv').config({ path: path.resolve(__dirname, './privateInf.env') });
 
 
 
 class Controller {
     pageMain = path.join(__dirname, '../Front-end/html/index.html') 
-    pageNewMain = path.join(__dirname, '../Front-end/html/newindex.html') 
+    pageNewMain = path.join(__dirname, '../Front-end/html/user.page.html') 
     pageError = path.join(__dirname, '../front-end/html/error.html')
     pageAuth = path.join(__dirname, '../front-end/html/authentication.html')
     pageEmailConfirmation = path.join(__dirname,'../front-end/html/email_confirmation.html' )

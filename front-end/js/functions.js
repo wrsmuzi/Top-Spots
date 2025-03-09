@@ -6,7 +6,7 @@
             email
         };
         try{
-            const sentEmail = await fetch('http://localhost:3500/resent-email', {
+            const sentEmail = await fetch('http://localhost:3000/resent-email', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -199,7 +199,7 @@
     //--------------------- Function for Log In -----------------------------------------------------
     sendLogIn = async (obj)=>{
         try{
-            const sendingData = await fetch('http://localhost:3500/api/logIn',{
+            const sendingData = await fetch('http://localhost:3000/api/logIn',{
                 method: 'POST',
                 headers:{
                     'Content-Type': 'application/json',
@@ -216,7 +216,7 @@
     // --------------------- Function for Sign Up ------------------------------------------------------
     sendSignUp = async (obj)=>{
         try{
-            const sendingData = await fetch('http://localhost:3500/api/signUp',{
+            const sendingData = await fetch('http://localhost:3000/api/signUp',{
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

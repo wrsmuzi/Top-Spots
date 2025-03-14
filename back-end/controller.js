@@ -10,17 +10,17 @@ require('dotenv').config({ path: path.resolve(__dirname, './privateInf.env') });
 
 
 class Controller {
-    pageMain = path.join(__dirname, '../Front-end/html/index.html') 
-    pageNewMain = path.join(__dirname, '../Front-end/html/user.page.html') 
+    pageBaseMain = path.join(__dirname, '../Front-end/html/index.html') 
+    pageFullMain = path.join(__dirname, '../Front-end/html/mainpage.html') 
     pageError = path.join(__dirname, '../front-end/html/error.html')
     pageAuth = path.join(__dirname, '../front-end/html/authentication.html')
     pageEmailConfirmation = path.join(__dirname,'../front-end/html/email_confirmation.html' )
 
 
     //Open Main page
-    openMainPage = (req, res)=>{
+    openBaseMainPage = (req, res)=>{
         try{
-            res.sendFile(this.pageMain,(err)=>{
+            res.sendFile(this.pageBaseMain,(err)=>{
                 if(err){
                     console.log(`Problem with sending Main page: ${err}`)
                     return res.status(404).json()
@@ -34,9 +34,9 @@ class Controller {
         }
     }
     //Open New Main page
-    openNewMainPage = (req, res)=>{
+    openFullMainPage = (req, res)=>{
         try{
-            res.sendFile(this.pageNewMain,(err)=>{
+            res.sendFile(this.pageFullMain,(err)=>{
                 if(err){
                     console.log(`Problem with sending New Main page: ${err}`)
                     return res.status(404).json()
@@ -418,11 +418,6 @@ class Controller {
             maxAge: 15 * 60 * 1000  // Alive time
             })
 
-
-
-
-
-
             console.log(`User with this email ${email} successfully logged in`)
             return res.status(200).json()
 
@@ -430,6 +425,41 @@ class Controller {
             console.log(`Problem with server, cause: ${err}`)
             return res.status(500).json()
         }
+    }
+    //Log Out
+    logOut = async (req, res) =>{
+        try{
+            const refreshToken = req.cookies.refreshToken
+            if (!refreshToken) {
+                console.log("No refresh token found in cookies");
+                this.clearCookies(res);
+                return res.redirect('/checkUser');
+            }
+            const response = await pool.query(`DELETE FROM "JWTRefreshToken" WHERE refresh_token = $1 RETURNING *`,[refreshToken]);
+            if(response.rowCount > 0){
+                console.log(`Refresh Token is deleted from Database`);  
+            }else{
+                console.log(`Refresh Token is not deleted from Database`); 
+            }
+            this.clearCookies(res);
+            return res.redirect('/checkUser');
+        }catch(err){
+            console.error(`Logout process failed:${err}`);
+            return res.status(500).json({ message: "Internal server error during logout" });
+        }  
+    }
+    //Clear Cookies
+    clearCookies = (res) =>{
+        res.clearCookie("refreshToken", {
+            httpOnly: true,
+            secure: true,
+            sameSite: "Strict"
+        });
+        res.clearCookie("accessToken", {
+            httpOnly: true,
+            secure: true,
+            sameSite: "Strict"
+        });
     }
 
 

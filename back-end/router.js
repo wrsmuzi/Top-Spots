@@ -4,7 +4,7 @@ const passport = require('./passport.js'); // 🔥 Додаємо імпорт p
 const Controller = require('./controller.js');
 const controller = new Controller();
 
-router.get('/', controller.openMainPage);
+router.get('/', controller.openBaseMainPage);
 router.get('/checkUser', controller.openAuthPage);
 router.get('/api/verify-email', controller.emailVerify);
 router.post('/resent-email', controller.resentEmail);
@@ -12,8 +12,11 @@ router.get('/email-confirmition', controller.openEmailConfirmation);
 router.post('/api/signUp', controller.signUp);
 router.post('/api/logIn', controller.logIn);
 
-router.get('/new-main', controller.checkValidityAccessToken)
-router.get('/new-main', controller.openNewMainPage)
+router.post('/logOut', controller.checkValidityAccessToken, controller.logOut);
+// router.post('/logOut', );
+
+router.get('/new-main', controller.checkValidityAccessToken);
+router.get('/new-main', controller.openFullMainPage);
 
 
 router.get('/auth/google', (req, res, next) => {

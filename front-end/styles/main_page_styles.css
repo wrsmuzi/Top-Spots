@@ -596,3 +596,8 @@ padding-top: 3%;
 .menu a:hover {
   background: #f0f0f0;
 }
+.logout_btn{
+  font-size: 20px;
+  color: #000;
+  
+}

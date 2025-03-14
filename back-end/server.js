@@ -4,12 +4,12 @@ const path = require('path')
 const router = require('./router.js')
 const cors = require('cors');
 const session = require('express-session');
-const passport = require('./passport.js'); // ✅ Тут вже правильно
+const passport = require('./passport.js'); 
 const cookieParser = require('cookie-parser');
 require('dotenv').config({ path: path.resolve(__dirname, './privateInf.env') });
 
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: 'http://localhost:3500',
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type,Authorization'
@@ -25,7 +25,7 @@ app.use(session({
 }));
 
 app.use(passport.initialize());
-app.use(passport.session()); // ✅ Сесія вже підключена
+app.use(passport.session()); 
 
 app.use(cookieParser());
 

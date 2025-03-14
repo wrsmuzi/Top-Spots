@@ -13,37 +13,39 @@
                 <div class="main__header">
                     <div class="header__topspot">
                         <div class="logo_video_header">
-                            <video
-                                class="logo_video"
-                                height="auto"
-                                autoplay
-                                muted
-                                playsinline
-                                noloop
-                            >
-                                <source
-                                    src="./img/output_video1.webm"
-                                    type="video/webm"
-                                />
-                                Logo don't opened
-                            </video>
                             <!-- <img src="./img/TopSpots2-ezgif.com-animated-gif-maker (1).gif" alt="GIF" class="logo_img"> -->
                         </div>
                     </div>
                     <ul class="header_list">
-                        <li class="header-ul_element"><a href="">Home</a></li>
                         <li class="header-ul_element"><a href="">GeoMap</a></li>
                         <li class="header-ul_element">
                             <a href="">Contact</a>
                         </li>
-
-                        <button
-                            class="button_header"
-                            id="SignUp"
-                            onclick="window.location.href='/checkUser'"
-                        >
-                            <span>Sign Up</span>
-                        </button>
+                        <nav class="navbar">
+                            <div class="menu-icon" id="menuBtn">☰</div>
+                            <div class="menu" id="menu">
+                                <ul>
+                                    <li>
+                                        <a href="profile.html">👤 Профіль</a>
+                                    </li>
+                                    <li>
+                                        <a href="setting.html"
+                                            >⚙️ Налаштування</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <button
+                                            class="logout_btn"
+                                            id="LogOut"
+                                            onclick="window.location.href='/logOut'"
+                                        >
+                                            <span>Log Out</span>
+                                        </button>
+                                    </li>
+                                    <!-- <a href="index.html">🚪 Вийти з Акаунту</a> -->
+                                </ul>
+                            </div>
+                        </nav>
                     </ul>
                 </div>
 
@@ -60,13 +62,18 @@
                         >
                             <path
                                 d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40
-    C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"
+C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"
                             />
                         </svg>
                         <input type="text" placeholder="Search City" />
                     </div>
 
                     <button class="search-button">Search</button>
+                </div>
+
+                <div class="main_categories">
+                    <div class="main-categories__title"></div>
+                    <div class="main-categories__block"></div>
                 </div>
 
                 <!--    ------------------      Video       --------------------------->
@@ -85,11 +92,12 @@
                 </video>
             </div>
             <!--end main page-->
-            <a href="/auth/google">
-                <button>Увійти через Google</button>
-            </a>
         </div>
 
-        <script type="module" src="../js/front_index.js"></script>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+        />
+        <script type="module" src="../js/front_mainpage.js"></script>
     </body>
 </html>

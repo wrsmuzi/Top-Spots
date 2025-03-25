@@ -162,7 +162,7 @@ svg{
 
 .search-bar {
   width: 100%;
-z-index: 2;
+z-index: 1;
 margin-top: 400px;
 margin-left: 50px;
 position: absolute;
@@ -249,7 +249,7 @@ position: absolute;
 
 
   .main_categories {
-    z-index: 2;
+    z-index: 1;
 margin-top: 500px;
 position: absolute;
 background-color: rgba(255, 255, 255, 0.361);
@@ -264,269 +264,8 @@ margin-left: 50px;
 }
 
 
-/* Styles for the registration menu */
-.wrapper_login {
-  margin-top: 100px;
-  position: absolute;
-margin-left: 38%;
-  z-index: 3;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 400px;
-overflow: hidden;
-background-color: rgba(67, 67, 67, 0.447);
-transition: height .2s ease;
-backdrop-filter: blur(30px);
-width: 387px;
-transform: scale(0);
-transition: transform .5s, height .2s ease;
-}
-.wrapper_login.active-popup{
-  transform: scale(1);
-}
-.wrapper_login.active .form-box.login{
-transition: none;
-transform: translateX(-400px);
-}
-
-.wrapper_login .form-box.login{
-transition: transform   .18s ease;
-transform: translateX(0);
-}
-
-.wrapper_login.active .form-box.register{
-transition: transform .18s ease;
-transform: translateX(0);
-}
-
-.wrapper_login.active{
-  height: 480px;
-}
-.wrapper_login.active .icon-close{
-margin-bottom: 440px;
-}
-.wrapper_login .form-box.register{
-  position: absolute;
-  transform: translateX(400px);
-  transition: none;
-  z-index: 3;
-}
 
 
-
-.form-box {
-
-  padding: 30px 40px;
-  border-radius: 10px;
-
-  max-width: 400px;
-  width: 100%;
-}
-
-
-.wrapper_login .icon-close{
-  cursor: pointer;
-  z-index: 4;
-margin-left: 353px;
-margin-bottom: 361px;
-background-color: rgb(0, 0, 0);
-padding-left:10px ;
-padding-top: 2px;
-  width: 35px;
-  height: 40px;
-  font-size: 2em;
-fill: white;
- border-bottom-left-radius: 20px;
-  position: absolute;
-  transition-duration: 0.3s;
-}
-.wrapper_login .icon-close:hover{
-background-color: white;
-fill: black;
-transition-duration: 0.3s;
-}
-.form-box h2 {
-padding-bottom: 10px;
-  text-align: center;
-  margin-bottom: 10px;
-  text-shadow: 0.5px 0.5px 1px #000;
-  font-size: 24px;
-  color: #ffffff;
-font-size: 35px;
-  letter-spacing: 0.8px;
-}
-.input-box {
-  position: relative;
-  margin-bottom: 20px;
-}
-
-
-.input-box input {
-  width: 100%;
-  padding: 10px 10px 10px 60px; /* Збільшено відступ зліва для іконки */
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background: #f9f9f9;
-  color: #333;
-  transition: border-color 0.3s;
-}
-
-.input-box input:focus {
-  border-color: #000000;
-  outline: none;
-}
-
-.input-box label {
-  position: absolute;
-  top: 50%;
-  left: 20px; /* Зміщення під іконку */
-  transform: translateY(-50%);
-  font-size: 14px;
-  color: #aaa;
-  pointer-events: none;
-  transition: top 0.3s, font-size 0.3s;
-}
-  
-
-.input-box input:focus + label,
-.input-box input:not(:placeholder-shown) + label {
-  top: -10px;
-  font-size: 15px;
-  color: #000000;
-}
-
-.input-box .icon {
-  position: absolute;
-  top: 50%;
-  left: 15px; /* Розташування іконки */
-  transform: translateY(-50%);
-  width: 20px; /* Фіксований розмір іконки */
-  height: 20px;
-  fill: #000000;
-  pointer-events: none;
-}
-
-.remember-forgot {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 14px;
-  color: #ffffff;
-  margin-bottom: 20px;
-}
-.remember-forgot label input:checked{
-  background-color: black;
-}
-
-
-
-
-.darkMode:active{
-  background-color: black;
-}
-
-
-.remember-forgot a {
-  color: #f1f1f1;
-  transition: color 0.3s;
-}
-
-.remember-forgot a:hover {
-  color: #2575fc;
-}
-
-.btn {
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  font-weight: bold;
-  color: #fff;
-  background: linear-gradient(135deg, #6a11cb, #2575fc);
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.5s;
-}
-
-.btn:hover {
-  background: linear-gradient(135deg, #2575fc, #6a11cb);
-}
-.btn:active{
-  background: linear-gradient(130deg, #0a2047, #290550);
-  
-}
-.btn-log:active{
-  background: linear-gradient(130deg, #0a2047, #290550);
-}
-.login-register {
-  text-align: center;
-  margin-top: 10px;
-  font-size: 14px;
-  color: #a3a3a3;
-}
-
-.login-register a {
-  color: #ffffff;
-  font-weight: bold;
-  transition: color 0.3s;
-}
-
-.login-register a:hover {
-  color: #2575fc;
-}
-
-.login_answer{
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-.login_answer_text{
-  font-size: 16px;
-  font-weight: 400;
-}
-
-
-.signup_answer{
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-.signup_answer_text{
-  font-size: 16px;
-  font-weight: 400;
-}
-
-
-
-.logo_video_header{
-  width: 300px;
-  height: 100px;
-  /* background-color: #f0f0f0; Фон для перевірки прозорості */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-}
-.logo_video{
-  margin-top: 10px;
-  width: 100%; /* Встановлення повної ширини */
-  height: auto; /* Автоматична висота для збереження пропорцій */
-  transform: scale(1.1); /* Масштабування відео */
-  transform-origin: center; /* Центр масштабування */
-  filter: blur(0.5px); /* Додає розмиття до відео */
-}
-
-
-.video-registr-login{
-padding-left: 10%;
-padding-bottom: 8%;
-padding-top: 3%;
-}
-.video-registr-loginVid{
-
-}
 
 
 
@@ -539,7 +278,7 @@ padding-top: 3%;
 .navbar {
   position: relative;
   padding: 10px;
-  background: #181818;
+
   color: white;
   text-align: right;
 }
@@ -552,10 +291,12 @@ padding-top: 3%;
 }
 
 .menu {
+
   position: absolute;
-  top: 50px;
-  right: 10px;
-  background: white;
+  z-index: 20;
+  top: -28px;
+  right: -19px;
+  background: rgb(241, 241, 241);
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 200px;
@@ -575,14 +316,17 @@ padding-top: 3%;
   list-style: none;
   padding: 0;
   margin: 0;
+
 }
 
 .menu li {
   border-bottom: 1px solid #ddd;
+  transition-duration: 1s;
 }
 
 .menu li:last-child {
   border-bottom: none;
+margin-bottom: 10px;
 }
 
 .menu a {
@@ -594,10 +338,50 @@ padding-top: 3%;
 }
 
 .menu a:hover {
-  background: #f0f0f0;
+  background: #2a2929;
 }
-.logout_btn{
-  font-size: 20px;
+.logout_btn {
+
+  position: relative;
+  display: inline-block;
+  padding: 4px 55px;
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: uppercase;
   color: #000;
-  
+  background: transparent;
+  border: 2px solid #000;
+  border-radius: 10px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+}
+
+.logout_btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  transition: left 0.3s ease-in-out;
+}
+
+.logout_btn:hover::before {
+  left: 0;
+}
+
+.logout_btn span {
+  position: relative;
+  z-index: 1;
+  transition: color 0.3s ease-in-out;
+}
+
+.logout_btn:hover span {
+  color: #fff;
+}
+
+.logout_btn:active {
+  transform: scale(0.95);
 }

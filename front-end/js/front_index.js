@@ -10,11 +10,6 @@
 // });
 
 
-// document.querySelectorAll('.icon-close').forEach(iconClose => {
-//     iconClose.addEventListener('click', () => {
-//         wrapper.classList.remove('active-popup');
-//     });
-// });
 
 
 

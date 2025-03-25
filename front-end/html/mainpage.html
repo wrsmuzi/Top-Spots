@@ -22,15 +22,45 @@
                             <a href="">Contact</a>
                         </li>
                         <nav class="navbar">
-                            <div class="menu-icon" id="menuBtn">☰</div>
+                            <div class="menu-icon" id="menuBtn">⚙️</div>
                             <div class="menu" id="menu">
                                 <ul>
                                     <li>
-                                        <a href="profile.html">👤 Профіль</a>
+                                        <a href="profile.html">👤 Profile</a>
                                     </li>
                                     <li>
                                         <a href="setting.html"
-                                            >⚙️ Налаштування</a
+                                            >⚙️ Settings</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a href="setting.html"
+                                            >⚙️ Change Profile</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a href="setting.html"
+                                            >⚙️ My Client</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a href="setting.html"
+                                            >⚙️ My Hotels</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a href="setting.html"
+                                            >⚙️ My City</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a href="setting.html"
+                                            >⚙️ Minimap</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a href="setting.html"
+                                            >⚙️ Photoalbom</a
                                         >
                                     </li>
                                     <li>
@@ -86,7 +116,7 @@ C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-2
                     width="100%"
                 >
                     <source
-                        src="img/4895-181257833_medium.mp4"
+                        src="C:\Top-Spotа\front-end\img\4895-181257833_medium.mp4"
                         type="video/mp4"
                     />
                 </video>
@@ -98,6 +128,20 @@ C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-2
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
         />
-        <script type="module" src="../js/front_mainpage.js"></script>
+        <script type="module">
+            const menuBtn = document.getElementById("menuBtn");
+const menu = document.getElementById("menu");
+
+menuBtn.addEventListener("click", () => {
+    menu.classList.toggle("active");
+});
+
+document.addEventListener("click", (event) => {
+    if (!menu.contains(event.target) && event.target !== menuBtn) {
+        menu.classList.remove("active");
+    }
+});
+
+        </script>
     </body>
 </html>

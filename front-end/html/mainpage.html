@@ -4,7 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Top Spots</title>
-        <link rel="stylesheet" href="../styles/main_page_styles.css" />
+        <link rel="stylesheet" href="../styles/user.page.css" />
     </head>
     <body>
         <div class="wrapper">
@@ -13,7 +13,20 @@
                 <div class="main__header">
                     <div class="header__topspot">
                         <div class="logo_video_header">
-                            <!-- <img src="./img/TopSpots2-ezgif.com-animated-gif-maker (1).gif" alt="GIF" class="logo_img"> -->
+                            <video
+                            class="logo_video"
+                            height="auto"
+                            autoplay
+                            muted
+                            playsinline
+                            noloop
+                        >
+                            <source
+                                src="../img/output_video1.webm"
+                                type="video/webm"
+                            />
+                            Logo don't opened
+                        </video>
                         </div>
                     </div>
                     <ul class="header_list">
@@ -22,60 +35,32 @@
                             <a href="">Contact</a>
                         </li>
                         <nav class="navbar">
-                            <div class="menu-icon" id="menuBtn">⚙️</div>
+                            <div class="menu-icon" id="menuBtn">☰
+                                
+                            </div>
                             <div class="menu" id="menu">
+                                <div class="close-container" id="closeBtn">
+                                    <div class="close-icon"></div>
+                                </div>
                                 <ul>
+                                    <li><a href="profile.html">👤 Profile</a></li>
+                                    <li><a href="setting.html">⚙️ Settings</a></li>
+                                    <li><a href="change_profile.html">🖊 Change Profile</a></li>
+                                    <li><a href="my_clients.html">📋 My Clients</a></li>
+                                    <li><a href="my_hotels.html">🏨 My Hotels</a></li>
+                                    <li><a href="my_city.html">🌆 My City</a></li>
+                                    <li><a href="minimap.html">🗺 Minimap</a></li>
+                                    <li><a href="photo_album.html">📷 Photo Album</a></li>
                                     <li>
-                                        <a href="profile.html">👤 Profile</a>
-                                    </li>
-                                    <li>
-                                        <a href="setting.html"
-                                            >⚙️ Settings</a
-                                        >
-                                    </li>
-                                    <li>
-                                        <a href="setting.html"
-                                            >⚙️ Change Profile</a
-                                        >
-                                    </li>
-                                    <li>
-                                        <a href="setting.html"
-                                            >⚙️ My Client</a
-                                        >
-                                    </li>
-                                    <li>
-                                        <a href="setting.html"
-                                            >⚙️ My Hotels</a
-                                        >
-                                    </li>
-                                    <li>
-                                        <a href="setting.html"
-                                            >⚙️ My City</a
-                                        >
-                                    </li>
-                                    <li>
-                                        <a href="setting.html"
-                                            >⚙️ Minimap</a
-                                        >
-                                    </li>
-                                    <li>
-                                        <a href="setting.html"
-                                            >⚙️ Photoalbom</a
-                                        >
-                                    </li>
-                                    <li>
-                                        <button
-                                            class="logout_btn"
-                                            id="LogOut"
-                                            onclick="window.location.href='/logOut'"
-                                        >
-                                            <span>Log Out</span>
+                                        <button class="logout_btn" id="LogOut" onclick="window.location.href='/logOut'">
+                                            <span>🚪 Log Out</span>
                                         </button>
                                     </li>
-                                    <!-- <a href="index.html">🚪 Вийти з Акаунту</a> -->
                                 </ul>
                             </div>
                         </nav>
+                        
+                        
                     </ul>
                 </div>
 
@@ -89,6 +74,7 @@
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 512 512"
+                            \
                         >
                             <path
                                 d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40
@@ -129,11 +115,16 @@ C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-2
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
         />
         <script type="module">
-            const menuBtn = document.getElementById("menuBtn");
+const menuBtn = document.getElementById("menuBtn");
 const menu = document.getElementById("menu");
+const closeBtn = document.getElementById("closeBtn");
 
 menuBtn.addEventListener("click", () => {
     menu.classList.toggle("active");
+});
+
+closeBtn.addEventListener("click", () => {
+    menu.classList.remove("active");
 });
 
 document.addEventListener("click", (event) => {

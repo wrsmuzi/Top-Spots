@@ -124,6 +124,7 @@
         const loadingBlock = document.getElementById('loadingBlock');
         const loginBlock = document.getElementById('loginBlock');
         const answerBlock = document.querySelector('.block_for_answer_log');
+        const loginForm = document.getElementById('Login_form');
 
         if (!loadingBlock || !loginBlock || !answerBlock) {
             console.error("One of this element is not exist");
@@ -137,11 +138,13 @@
         loginBlock.classList.remove('invalidRegLogForm');
         loginBlock.classList.add('validRegLogForm');
 
+        loginForm.reset();
         answerBlock.innerHTML = errorText;
+        
+      
     }
     //---------------------- Function to control Log In answer of status code from back end -----------------------------
     statusLogInController = (status, redirectUrl)=>{
-        console.log(`Status:${status}`);
         if(!status){
             console.log(`Status controller have not status receive`)
             return
@@ -205,10 +208,6 @@
     //--------------------- Function for Log In -----------------------------------------------------
     sendLogIn = async (obj)=>{
         try{
-            console.log(`Rememberr Me: ${obj.remember}`);
-            // if(obj.remember===`false`){
-            //     obj.remember === `true`;
-            // }
             const sendingData = await fetch('http://localhost:3500/api/logIn', {
                 method: 'POST',
                 headers: {
@@ -217,12 +216,15 @@
                 credentials: 'include', 
                 body: JSON.stringify(obj),
             });
-            const data = await sendingData.json()
-            this.statusLogInController(sendingData.status, data.redirectUrl);
-          
+            if(sendingData.ok){
+                const data = await sendingData.json()
+                this.statusLogInController(sendingData.status, data.redirectUrl);
+            }else{
+               this.statusLogInController(sendingData.status); 
+            }
         }catch(err){
             console.log(`Internal sevrver error`)
-            // throw new Error(`Problem with server: ${err.statusText}`)
+            throw new Error(`Problem with server: ${err.statusText}`)
         }
     }
     // --------------------- Function for Sign Up ------------------------------------------------------

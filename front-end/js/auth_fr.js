@@ -13,7 +13,9 @@ loginForm.addEventListener('submit', async (event)=>{
     
     const formObj = new FormData(loginForm)
     const inputValues = Object.fromEntries(formObj.entries())
+    const rememberMe = document.getElementById('rememberMe').checked
     const {email, password}=inputValues
+    inputValues.remember = rememberMe
 
     if(!email?.trim() || !password?.trim()){
         const loginAnswer = document.querySelector('.block_for_answer_log')
@@ -65,7 +67,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
         registerForm.classList.toggle('auth_active')
    })
 })
-
+//------------------------------------ Right Side Change Photo-----------------------------------------------
 document.addEventListener('DOMContentLoaded', ()=>{
     const img = [
         '../img/auth/photo_2025-01-31_23-28-51.jpg', '../img/auth/photo_2025-01-31_23-28-52.jpg', '../img/auth/photo_2025-01-31_23-28-53.jpg', 
@@ -106,6 +108,8 @@ logCheckVsbBtn.addEventListener('click', () => {
     const blockPassword = "url('../img/closed-Eyes.png')";
     Functions.controllPasswordVisibility(logpasswordField, logCheckVsbBtn, showPassword, blockPassword);
 });
+
+
 
 
 

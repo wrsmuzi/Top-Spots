@@ -205,6 +205,10 @@
     //--------------------- Function for Log In -----------------------------------------------------
     sendLogIn = async (obj)=>{
         try{
+            console.log(`Rememberr Me: ${obj.remember}`);
+            // if(obj.remember===`false`){
+            //     obj.remember === `true`;
+            // }
             const sendingData = await fetch('http://localhost:3500/api/logIn', {
                 method: 'POST',
                 headers: {
@@ -218,7 +222,7 @@
           
         }catch(err){
             console.log(`Internal sevrver error`)
-            throw new Error(`Problem with server: ${err.statusText}`)
+            // throw new Error(`Problem with server: ${err.statusText}`)
         }
     }
     // --------------------- Function for Sign Up ------------------------------------------------------

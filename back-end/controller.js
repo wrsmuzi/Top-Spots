@@ -104,19 +104,19 @@ class Controller {
     };
 
     // Creating JWT Token and sending to Data BASE
-    creatingJwtAccRefTokens = async (username, email) => {
+    creatingJwtAccRefTokens = async (username, email, remember) => {
         try {
             const accessTokenPayload = {
                 username,
                 email,
                 iat: Math.floor(Date.now() / 1000), // Time when Token was created
-                exp: Math.floor(Date.now() / 1000) + 1 * 60, // Time when Token will unvalid
+                exp: Math.floor(Date.now() / 1000) + 7 * 60, // Time when Token will unvalid
             };
              const refreshTokenPayload = {
                  username,
                  email,
                  iat: Math.floor(Date.now() / 1000), // Time when Token was created
-                 exp: Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60 // Time when Token will unvalid
+                 exp: remember ? Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60 : Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60 // Time when Token will unvalid
              };
             const accessToken = jwt.sign(accessTokenPayload, process.env.ACCESSJWTTOKEN);
             const refreshToken = jwt.sign(refreshTokenPayload, process.env.REFRESHJWTTOKEN);
@@ -436,8 +436,8 @@ class Controller {
     };
     //Log in
     logIn = async (req, res, next) => {
-        const { email, password } = req.body;
-        if (!email || !password) {
+        const { email, password, remember } = req.body;
+        if (!email || !password ) {
             console.log(`User have not entered login or password`);
             return res.status(400).json();
         }
@@ -460,7 +460,7 @@ class Controller {
                 return res.status(401).json();
             }
             const { refreshToken, accessToken } =
-                await this.creatingJwtAccRefTokens(user.username, user.email);
+                await this.creatingJwtAccRefTokens(user.username, user.email, remember);
             if (!refreshToken || !accessToken) {
                 console.log(`Error: JWT tokens were not created properly`);
                 return res

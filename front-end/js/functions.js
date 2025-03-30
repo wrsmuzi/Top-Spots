@@ -141,13 +141,13 @@
     }
     //---------------------- Function to control Log In answer of status code from back end -----------------------------
     statusLogInController = (status, redirectUrl)=>{
-        console.log(`Redirect Url:${redirectUrl}`);
+        console.log(`Status:${status}`);
         if(!status){
             console.log(`Status controller have not status receive`)
             return
         }
     //---------Error Text HTML----------------------  
-        const success200 = `<h1 class="answer_text">You have successfully logged in</h1>`
+        // const success200 = `<h1 class="answer_text">You have successfully logged in</h1>`
         const wrongLogOrErrError401 = `<h1 class="answer_text">Wrong login or password</h1>`
         const tooManyRequestsError429 = `<h1 class="answer_text">Too many requests, please try again later</h1>`
         const unknowProblemErrorDef = `<h1 class="answer_text">An error occurred, we are working on it</h1>`
@@ -158,7 +158,7 @@
                     console.log(`Redirected to new-main`);
                     window.location.href=redirectUrl;
                 }else{
-                    console.log(`Log in (status 200) failed cause wwe have not get from back redirectUrl`)
+                    console.log(`Log in (status 200) failed cause we have not get from back redirectUrl`)
                 }
                 break;
             case 401:

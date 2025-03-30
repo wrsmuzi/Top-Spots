@@ -14,8 +14,8 @@ loginForm.addEventListener('submit', async (event)=>{
     const formObj = new FormData(loginForm)
     const inputValues = Object.fromEntries(formObj.entries())
     const rememberMe = document.getElementById('rememberMe').checked
-    const {email, password}=inputValues
-    inputValues.remember = rememberMe
+    const { email, password } = { ...inputValues, remember: rememberMe };
+    
 
     if(!email?.trim() || !password?.trim()){
         const loginAnswer = document.querySelector('.block_for_answer_log')

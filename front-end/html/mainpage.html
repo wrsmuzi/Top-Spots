@@ -100,7 +100,7 @@ C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-2
                     width="100%"
                 >
                     <source
-                        src="C:\Top-Spotа\front-end\img\4895-181257833_medium.mp4"
+                        src="../img/4895-181257833_medium.mp4"
                         type="video/mp4"
                     />
                 </video>
@@ -108,29 +108,8 @@ C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-2
             <!--end main page-->
         </div>
 
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-        />
-        <script type="module">
-const menuBtn = document.getElementById("menuBtn");
-const menu = document.getElementById("menu");
-const closeBtn = document.getElementById("closeBtn");
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+         <script type="module" src="../js/front_mainpage.js"></script>
 
-menuBtn.addEventListener("click", () => {
-    menu.classList.toggle("active");
-});
-
-closeBtn.addEventListener("click", () => {
-    menu.classList.remove("active");
-});
-
-document.addEventListener("click", (event) => {
-    if (!menu.contains(event.target) && event.target !== menuBtn) {
-        menu.classList.remove("active");
-    }
-});
-
-        </script>
     </body>
 </html>

@@ -140,7 +140,8 @@
         answerBlock.innerHTML = errorText;
     }
     //---------------------- Function to control Log In answer of status code from back end -----------------------------
-    statusLogInController = (status)=>{
+    statusLogInController = (status, redirectUrl)=>{
+        console.log(`Redirect Url:${redirectUrl}`);
         if(!status){
             console.log(`Status controller have not status receive`)
             return
@@ -153,7 +154,12 @@
 
         switch(status) {
             case 200: 
-                this.answerLogError(success200);
+                if(redirectUrl){
+                    console.log(`Redirected to new-main`);
+                    window.location.href=redirectUrl;
+                }else{
+                    console.log(`Log in (status 200) failed cause wwe have not get from back redirectUrl`)
+                }
                 break;
             case 401:
                 this.answerLogError(wrongLogOrErrError401);
@@ -199,14 +205,16 @@
     //--------------------- Function for Log In -----------------------------------------------------
     sendLogIn = async (obj)=>{
         try{
-            const sendingData = await fetch('http://localhost:3500/api/logIn',{
+            const sendingData = await fetch('http://localhost:3500/api/logIn', {
                 method: 'POST',
-                headers:{
+                headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(obj)
-            })
-            this.statusLogInController(sendingData.status)
+                credentials: 'include', 
+                body: JSON.stringify(obj),
+            });
+            const data = await sendingData.json()
+            this.statusLogInController(sendingData.status, data.redirectUrl);
           
         }catch(err){
             console.log(`Internal sevrver error`)
@@ -257,11 +265,36 @@
 
 
 
-//----------------Class with functions for index_fr.js --> index.html------------------------------------------------------
-class indexFunctionsHandler{
+//----------------Class with functions for front_mainpage.js --> mainpage.html------------------------------------------------------
+class mainPageFunctionsHandler{
+
+    //------------------------ Sending Cookie for Log Out ----------------------------------
+    logOut = async () =>{
+        try{
+            const sendingTokens = await fetch('http://localhost:3500/logOut', {
+                method: 'POST',
+                credentials: 'include' // Sending Cookie
+            });
+            if (!sendingTokens.ok) {
+                throw new Error(`Server error: ${sendingTokens.status} ${sendingTokens.statusText}`);
+            }
+            const response = await sendingTokens.json();
+            if(sendingTokens.status === 200){
+                console.log(`Auth Page successfully opened, Redirected Url:${response.redirectUrl}`);
+                window.location.href = response.redirectUrl;
+            }else{
+                console.log(`Probllem with Log Out btn`);
+            }
+        }catch(err){
+            return console.log(`Log Out is faied: ${err.message}`);
+        }
+    }
+}
+
+//----------------Class with functions for front_index.js --> index.html------------------------------------------------------
+class indexFunctionsHandler {
 
 }
 
-
 //--------------Export classes in another files-----------------------------------
-export { authFunctionsHandler, indexFunctionsHandler };
+export { authFunctionsHandler, mainPageFunctionsHandler, indexFunctionsHandler };

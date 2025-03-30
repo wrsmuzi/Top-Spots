@@ -10,12 +10,14 @@ router.get('/api/verify-email', controller.emailVerify);
 router.post('/resent-email', controller.resentEmail);
 router.get('/email-confirmition', controller.openEmailConfirmation);
 router.post('/api/signUp', controller.signUp);
+
 router.post('/api/logIn', controller.logIn);
 
-router.post('/logOut', controller.checkValidityAccessToken, controller.logOut);
-// router.post('/logOut', );
 
-router.get('/new-main', controller.checkValidityAccessToken);
+router.post('/logOut', controller.checkValidityAccessToken);
+router.post('/logOut', controller.logOut);
+
+router.use('/new-main', controller.checkValidityAccessToken);
 router.get('/new-main', controller.openFullMainPage);
 
 

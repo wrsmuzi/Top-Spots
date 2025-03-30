@@ -285,7 +285,7 @@ class Controller {
             );
             if (checkToken.rowCount === 0) {
                 console.log(
-                    `Database has no this token, so wew can't conform email`,
+                    `Database has no this token, so wew can't confirm email`,
                 );
                 return;
             }
@@ -293,7 +293,7 @@ class Controller {
             console.log(`Token id: ${chekedTokenId}`);
 
             const isVerified = await pool.query(
-                `UPDATE "Users" SET is_verified = true WHERE evtoken_id = $1 RETURNING is_verified, email, username`,
+                `UPDATE "Users" SET is_verified = true WHERE evtoken_id = $1 RETURNING is_verified, email, username, remember_me`,
                 [chekedTokenId],
             );
             if (isVerified.rowCount === 0) {
@@ -307,9 +307,10 @@ class Controller {
 
             const username = isVerified.rows[0].username;
             const email = isVerified.rows[0].email;
+            const remember = isVerified.rows[0].remember_me;
 
             const { refreshToken, accessToken } =
-                await this.creatingJwtAccRefTokens(username, email);
+                await this.creatingJwtAccRefTokens(username, email, remember);
             if (!refreshToken || !accessToken) {
                 console.log(`Error: JWT tokens were not created properly`);
                 return res
@@ -375,7 +376,7 @@ class Controller {
 
     //Registration
     signUp = async (req, res) => {
-        const { username, email, password } = req.body;
+        const { username, email, password, remember } = req.body;
         const saltLvl = 10;
 
         if (!username || !email || !password) {
@@ -412,8 +413,8 @@ class Controller {
             }
             //Creating/Sending User and EVToken in database
             const creatingUser = await pool.query(
-                `INSERT INTO "Users" (username, email, password, evtoken_id) VALUES ($1, $2, $3, $4) RETURNING user_id`,
-                [username, email, hashedPassword, EVToken],
+                `INSERT INTO "Users" (username, email, password, evtoken_id, remember_me) VALUES ($1, $2, $3, $4, $5) RETURNING user_id`,
+                [username, email, hashedPassword, EVToken, remember]
             );
             if (creatingUser.rowCount === 0) {
                 console.log(
@@ -459,13 +460,19 @@ class Controller {
                 console.log(`User have entered wrong password`);
                 return res.status(401).json();
             }
+            
+            if (remember) {
+                const savingRemember = await pool.query(`UPDATE "Users" SET remember_me = $1 WHERE email = $2 RETURNING username`,[remember, user.email]);
+                if (savingRemember.rowCount === 0) {
+                    return console.log(`Saving Remember Me in DB is is failed`);
+                }
+            }
+
             const { refreshToken, accessToken } =
                 await this.creatingJwtAccRefTokens(user.username, user.email, remember);
             if (!refreshToken || !accessToken) {
                 console.log(`Error: JWT tokens were not created properly`);
-                return res
-                    .status(500)
-                    .json({ error: 'JWT token generation failed' });
+                return res.status(500).json({ error: 'JWT token generation failed' });
             }
 
             res.cookie('refreshToken', refreshToken, {
@@ -482,9 +489,6 @@ class Controller {
             });
 
             console.log(`User with this email ${email} successfully logged in`);
-            // next();
-            // this.openFullMainPage(req, res);
-            // res.redirect(`/new-main`);
             res.status(200).json({redirectUrl:'/new-main'});
              
         } catch (err) {

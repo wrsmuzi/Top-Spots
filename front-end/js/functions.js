@@ -104,6 +104,7 @@
         const loadingBlock = document.getElementById('loadingBlock');
         const regBlock = document.getElementById('registratioBlock');
         const answerBlock = document.querySelector('.block_for_answer_reg');
+        const registrationForm = document.getElementById('Registration_form');
 
         if (!loadingBlock || !regBlock || !answerBlock) {
             console.error("One of this element is not exist");
@@ -117,6 +118,7 @@
         regBlock.classList.remove('invalidRegLogForm');
         regBlock.classList.add('validRegLogForm');
 
+        registrationForm.reset();
         answerBlock.innerHTML = errorText;
     }
     //---------------------------Function for Creating Answer from Server in Login form------------------------

@@ -9,7 +9,7 @@ const cookieParser = require('cookie-parser');
 require('dotenv').config({ path: path.resolve(__dirname, './privateInf.env') });
 
 app.use(cors({
-    origin: 'http://localhost:3500',
+    origin: 'http://localhost:3000',
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type,Authorization'

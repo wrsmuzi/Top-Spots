@@ -330,7 +330,7 @@ margin-left: 20%;
 
 .reg_password_visibility_btn{
     position: absolute;
-    top: 40.4%;
+    top: 57.4%;
     left: 68%;
     width: 2.5%;
     height: 2.5%;
@@ -341,7 +341,7 @@ margin-left: 20%;
     pointer-events: auto;
     cursor: pointer;
     transition: opacity 0.5s ease;
-    margin-top: 10px;
+
 }
 .log_password_visibility_btn{
     position: absolute;

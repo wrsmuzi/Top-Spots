@@ -13,7 +13,7 @@ loginForm.addEventListener('submit', async (event)=>{
     
     const formObj = new FormData(loginForm)
     const inputValues = Object.fromEntries(formObj.entries())
-    const rememberMe = document.getElementById('rememberMe').checked
+    const rememberMe = document.getElementById('rememberMeLog').checked
     const { email, password } = inputValues
     inputValues.remember = rememberMe
     
@@ -38,7 +38,9 @@ signUpForm.addEventListener('submit', async(event)=>{
 
     const formObj = new FormData(signUpForm)
     const  inputValues = Object.fromEntries(formObj.entries())
+    const rememberMe = document.getElementById('rememberMeReg').checked;
     const {username, email, password}= inputValues
+    inputValues.remember = rememberMe;
 
     if(!username?.trim() || !email?.trim() || !password?.trim()){
         const signupAnswer = document.querySelector('.block_for_answer_reg')

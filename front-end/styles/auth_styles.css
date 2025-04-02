@@ -284,7 +284,7 @@ width: 330px;
     padding: 14px 0;
     font-size: 18px;
     font-weight: 600;
-margin-left: 41%;
+margin-left: 21%;
     margin-bottom: 20px;
     margin-top: -30px;
     color: rgb(37, 37, 37);
@@ -325,36 +325,43 @@ margin-left: 41%;
 
 }
 
-
-.reg_password_visibility_btn{
+/* Контейнер для форми, щоб кнопка була відносно нього */
+.form-container {
+    position: relative;
+}
+form-container-log{
+    position: relative;  
+}
+/* Кнопка */
+.reg_password_visibility_btn {
     position: absolute;
-    top: 54.6%;
-    left: 70%;
-    width: 2.5%;
-    height: 2.5%;
+    top: 86%; /* Центруємо вертикально */
+    right: 5%; /* Відстань від правого краю */
+    width: 2vw; /* Відносна ширина */
+    height: 2vw; /* Відносна висота */
     background-image: url('../img/opened-Eyes.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     pointer-events: auto;
     cursor: pointer;
-    transform: translate(-50%, -50%); /* Це дозволяє розмістити кнопку точно в центрі */
+    transform: translateY(-50%); /* Центруємо по вертикалі */
     transition: opacity 0.5s ease;
-
 }
+
 .log_password_visibility_btn{
     position: absolute;
-    top: 28.6%;
-    left: 72.5%;
-    width: 2.5%;
-    height: 2.5%;
+    top: 74.5%; /* Центруємо вертикально */
+    right: 5%; /* Відстань від правого краю */
+    width: 2vw; /* Відносна ширина */
+    height: 2vw; /* Відносна висота */
     background-image: url('../img/opened-Eyes.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     pointer-events: auto;
     cursor: pointer;
-    transform: translate(-50%, -50%); /* Це дозволяє розмістити кнопку точно в центрі */
+    transform: translateY(-50%); /* Центруємо по вертикалі */
     transition: opacity 0.5s ease;
 }
 .block_for_remember{

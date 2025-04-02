@@ -291,12 +291,12 @@ h1,h2,h3,h4,h5,h6{font-weight: 600;}
     align-items: center;
     justify-content: center;
     gap: 12px;
-    width: 55%;
+    width: 65%;
     padding: 14px 0;
     font-size: 18px;
     font-weight: 600;
 
-margin-left: 21%;
+
 
     /* margin-left: 41%;
     margin-bottom: 20px;
@@ -347,10 +347,10 @@ form-container-log{
 /* Кнопка */
 .reg_password_visibility_btn {
     position: absolute;
-    top: 86%; /* Центруємо вертикально */
+    top: 84%; /* Центруємо вертикально */
     right: 5%; /* Відстань від правого краю */
-    width: 2vw; /* Відносна ширина */
-    height: 2vw; /* Відносна висота */
+    width: 1.5vw; /* Відносна ширина */
+    height: 1.5vw; /* Відносна висота */
     background-image: url('../img/opened-Eyes.png');
     background-size: cover;
     background-position: center;

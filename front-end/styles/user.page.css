@@ -247,6 +247,62 @@ position: absolute;
     color: rgba(0, 0, 0, 1);
   }
 
+/* Стилі для випадаючого списку */
+#suggestionsList {
+  position: absolute;
+  top: calc(100% + 5px); /* Випадає під полем */
+  left: 0;
+  width: calc(100% - 1px);
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Тінь для глибини */
+  max-height: 250px;
+  overflow-y: auto;
+  list-style-type: none;
+  padding: 5px 0;
+  margin: 0;
+  z-index: 1000;
+  backdrop-filter: blur(15px); /* Розмиття */
+  display: none; /* Спочатку схований */
+  transition: all 0.3s ease-in-out; /* Плавний ефект */
+  opacity: 0; /* Початково список невидимий */
+}
+
+/* Стиль для кожного елемента списку */
+#suggestionsList li {
+  padding: 12px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #333; /* Темніший текст для контрасту */
+  transition: all 0.3s ease;
+  border-radius: 8px;
+}
+
+/* При наведенні */
+#suggestionsList li:hover {
+  background-color: rgba(100, 100, 100, 0.1); /* Легкий фон при наведенні */
+  transform: translateX(5px); /* Легке зміщення вбік */
+  color: #007BFF; /* Зміна кольору тексту */
+}
+
+/* При натисканні */
+#suggestionsList li:active {
+  background-color: rgba(0, 123, 255, 0.2); /* Легке виділення */
+  color: #0056b3; /* Темніший колір */
+}
+
+/* Анімація для появи списку */
+#suggestionsList.show {
+  opacity: 1;
+}
+
+/* Стиль для повідомлення "Нічого не знайдено" */
+#suggestionsList li.no-results {
+  font-style: italic;
+  color: #777;
+  text-align: center;
+  padding: 15px;
+}
 
   .main_categories {
     z-index: 1;

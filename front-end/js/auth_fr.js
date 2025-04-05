@@ -53,6 +53,8 @@ signUpForm.addEventListener('submit', async(event)=>{
 document.addEventListener('DOMContentLoaded', ()=>{
     const registerForm = document.getElementById('registratioBlock');
     const loginBlock = document.getElementById('loginBlock')
+    const resetPasswordBlock = document.querySelector('.reset_password_block');
+    
 // from registration in login
     const openLogIn = document.getElementById('openLogIn');
     openLogIn.addEventListener('click', () => {
@@ -69,6 +71,22 @@ document.addEventListener('DOMContentLoaded', ()=>{
         registerForm.classList.toggle('auth_inactive')
         registerForm.classList.toggle('auth_active')
    })
+//from login in reset password
+    const resetPassword = document.getElementById('resetPassword'); 
+    resetPassword.addEventListener('click', () => {
+       loginBlock.classList.toggle('auth_active');
+       loginBlock.classList.toggle('auth_inactive');
+       resetPasswordBlock.classList.toggle('auth_active')
+       resetPasswordBlock.classList.toggle('auth_inactive')
+   })
+//from reset password in login
+    const returnBtn = document.getElementById('returnBtn');
+    returnBtn.addEventListener('click', ()=>{
+        loginBlock.classList.toggle('auth_active');
+        loginBlock.classList.toggle('auth_inactive');
+        resetPasswordBlock.classList.toggle('auth_active');
+        resetPasswordBlock.classList.toggle('auth_inactive');
+    })
 })
 //------------------------------------ Right Side Change Photo-----------------------------------------------
 document.addEventListener('DOMContentLoaded', ()=>{

@@ -46,7 +46,7 @@
                                 <img src="https://www.svgrepo.com/show/475656/google-color.svg"  alt="Google Logo" class="google-icon">
                                 <span>Sign up with Google</span>
                             </a>
-                            </div>
+                        </div>
 
                               
                     <div class="or_block">
@@ -117,14 +117,46 @@
                                     Remember me
                                 </label>
                             </div>  
+                            
                                         
                             <button class="regAndlog_main_btn" id="login_btn"><span>Login</span></button>
                         </form>
                     </div>
-                    <div class="logAndreg_btn_block">
-                        <h1 class="logAndreg_text">Don't have an account yet?  <button class="logAndreg_btn" id="openRegister">Register</button></h1>
+                    <div class="block_for_sub">
+                        <div class="block_for_reset_password">
+                            <h1 class="text_reset_password">Forgot your password? <button class="reset_password_btn" id="resetPassword">Reset it now</button></h1>
+                        </div>
+                        <div class="logAndreg_btn_block">
+                            <h1 class="logAndreg_text">Don't have an account yet? <button class="logAndreg_btn" id="openRegister">Register</button></h1>
+                        </div>
                     </div>
-
+                </div>
+                <!------------------------------------- Reset Password block ------------------------------------->
+                <div class="reset_password_block main_block auth_inactive">
+                    <div class="reset_password_main">
+                        <div class="rp_header">
+                            <div class="rp_block_for_img">
+                                <div class="rp_block_img">
+                                    <img class="rp_img" src="../img/reset_password.png" alt="">
+                                </div>
+                            </div>
+                            <div class="rp_block_for_text">
+                                <h2 class="rp_header_text_01">Forgot your Password?</h2>
+                                <p class="rp_header_text_02">Enter your email to reset it!</p>
+                            </div>
+                        </div>
+                        <div class="reset_password_footer">
+                            <p class="rp_footer_text_01">Email</p>
+                            <form id="Resent_Password_Form" class="rp_footer_form" >
+                                <input type="email" class="rp_footer_email" name="resentPasswordEmail" placeholder="Enter your email" required> 
+                                <button id="confirmResentPasswordBtn" class="rp_footer_confirm_btn">Confirm</button>
+                            </form>
+                            <div class="rp_footer_block_return_to_login">
+                                <div class="rp_footer_return_img_block_btn"><img src="../img/left_arrow_reset_password.png" class="rp_footer_return_img_btn" alt=""></div>
+                                <button id="returnBtn" class="rp_footer_return_btn">Return back to login form</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
                
@@ -137,6 +169,7 @@
             <div class="shadow_block_03"></div>
             <div class="shadow_block_04"></div>
         </div>
+   
 
         
 

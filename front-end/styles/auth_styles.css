@@ -904,3 +904,13 @@ input[type="checkbox"] {
     height: auto;
     object-fit: cover;
 }
+
+.rp_footer_block_for_answer{
+    text-align: center;
+}
+.rp_footer_answer_text{
+    font-size: 16px;
+    letter-spacing: 1px;
+    padding: 0px 0px 15px 0px;
+}
+

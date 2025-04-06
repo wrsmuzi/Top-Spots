@@ -5,20 +5,24 @@ const Controller = require('./controller.js');
 const controller = new Controller();
 
 router.get('/', controller.openBaseMainPage);
+
 router.get('/checkUser', controller.openAuthPage);
+
 router.get('/api/verify-email', controller.emailVerify);
-router.post('/resent-email', controller.resentEmail);
 router.get('/email-confirmition', controller.openEmailConfirmation);
+router.post('/resent-email', controller.resentEmail);
+
+
 router.post('/api/signUp', controller.signUp);
-
 router.post('/api/logIn', controller.logIn);
-
 
 router.post('/logOut', controller.checkValidityAccessToken);
 router.post('/logOut', controller.logOut);
 
 router.use('/new-main', controller.checkValidityAccessToken);
 router.get('/new-main', controller.openFullMainPage);
+
+router.post('/api/resetPasword', controller.resetPasswordSentEmail);
 
 
 router.get('/auth/google', (req, res, next) => {

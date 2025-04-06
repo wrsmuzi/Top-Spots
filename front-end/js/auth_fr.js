@@ -26,7 +26,6 @@ loginForm.addEventListener('submit', async (event)=>{
     const sendingData = await Functions.sendLogIn(inputValues);
 })
 
-
 //---------------SIGN UP--------------------------------------------
 const signUpForm = document.getElementById('Registration_form')
 signUpForm.addEventListener('submit', async(event)=>{
@@ -49,7 +48,29 @@ signUpForm.addEventListener('submit', async(event)=>{
     Functions.loadingRegAnimation()
     const sendingData = await Functions.sendSignUp(inputValues)
 })
-//------------------------------------ Move Login/Register form-----------------------------------------------
+
+//---------------RESET PASSWORD--------------------------------------------
+const resetPasswordForm = document.getElementById('Resent_Password_Form');
+resetPasswordForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    if (!resetPasswordForm.checkValidity()) {
+        return console.log(`Reset Password form is not valid`);
+    }
+
+    const formObj = new FormData(resetPasswordForm);
+    const resetPasswordObj = Object.fromEntries(formObj.entries());
+    const { resentPasswordEmail } = resetPasswordObj;
+
+    if (!resentPasswordEmail.trim()) {
+        const blockForAnswer = document.querySelector(`.rp_footer_block_for_answer`);
+        return blockForAnswer.innerHTML = `<h1 class="rp_footer_answer_text">Email is required</h1>`;
+    }
+
+    Functions.loadingRegAnimation();
+    const sendingEmail = await Functions.sendResetPasswordEmail(resetPasswordObj);
+});
+//------------------------------------ Move Login/Register/Reset Password form-----------------------------------------------
 document.addEventListener('DOMContentLoaded', ()=>{
     const registerForm = document.getElementById('registratioBlock');
     const loginBlock = document.getElementById('loginBlock')

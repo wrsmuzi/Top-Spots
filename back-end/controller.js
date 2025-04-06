@@ -112,14 +112,22 @@ class Controller {
                 iat: Math.floor(Date.now() / 1000), // Time when Token was created
                 exp: Math.floor(Date.now() / 1000) + 7 * 60, // Time when Token will unvalid
             };
-             const refreshTokenPayload = {
-                 username,
-                 email,
-                 iat: Math.floor(Date.now() / 1000), // Time when Token was created
-                 exp: remember ? Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60 : Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60 // Time when Token will unvalid
-             };
-            const accessToken = jwt.sign(accessTokenPayload, process.env.ACCESSJWTTOKEN);
-            const refreshToken = jwt.sign(refreshTokenPayload, process.env.REFRESHJWTTOKEN);
+            const refreshTokenPayload = {
+                username,
+                email,
+                iat: Math.floor(Date.now() / 1000), // Time when Token was created
+                exp: remember
+                    ? Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60
+                    : Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60, // Time when Token will unvalid
+            };
+            const accessToken = jwt.sign(
+                accessTokenPayload,
+                process.env.ACCESSJWTTOKEN,
+            );
+            const refreshToken = jwt.sign(
+                refreshTokenPayload,
+                process.env.REFRESHJWTTOKEN,
+            );
             const saveToken = await pool.query(
                 `
                     INSERT INTO "JWTRefreshToken" (refresh_token) 
@@ -320,13 +328,13 @@ class Controller {
             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true, // Defend from XSS
                 secure: false, // Only  HTTPS
-                sameSite: 'Strict' // Defend from CSRF
+                sameSite: 'Strict', // Defend from CSRF
                 // maxAge: 7 * 24 * 60 * 60 * 1000, // Alive time
             });
             res.cookie('accessToken', accessToken, {
                 httpOnly: true, // Defend from XSS
                 secure: false, // Only  HTTPS
-                sameSite: 'Strict' // Defend from CSRF
+                sameSite: 'Strict', // Defend from CSRF
                 // maxAge: 2 * 60 * 1000, // Alive time
             });
 
@@ -414,7 +422,7 @@ class Controller {
             //Creating/Sending User and EVToken in database
             const creatingUser = await pool.query(
                 `INSERT INTO "Users" (username, email, password, evtoken_id, remember_me) VALUES ($1, $2, $3, $4, $5) RETURNING user_id`,
-                [username, email, hashedPassword, EVToken, remember]
+                [username, email, hashedPassword, EVToken, remember],
             );
             if (creatingUser.rowCount === 0) {
                 console.log(
@@ -438,7 +446,7 @@ class Controller {
     //Log in
     logIn = async (req, res, next) => {
         const { email, password, remember } = req.body;
-        if (!email || !password ) {
+        if (!email || !password) {
             console.log(`User have not entered login or password`);
             return res.status(400).json();
         }
@@ -460,37 +468,45 @@ class Controller {
                 console.log(`User have entered wrong password`);
                 return res.status(401).json();
             }
-            
+
             if (remember) {
-                const savingRemember = await pool.query(`UPDATE "Users" SET remember_me = $1 WHERE email = $2 RETURNING username`,[remember, user.email]);
+                const savingRemember = await pool.query(
+                    `UPDATE "Users" SET remember_me = $1 WHERE email = $2 RETURNING username`,
+                    [remember, user.email],
+                );
                 if (savingRemember.rowCount === 0) {
                     return console.log(`Saving Remember Me in DB is is failed`);
                 }
             }
 
             const { refreshToken, accessToken } =
-                await this.creatingJwtAccRefTokens(user.username, user.email, remember);
+                await this.creatingJwtAccRefTokens(
+                    user.username,
+                    user.email,
+                    remember,
+                );
             if (!refreshToken || !accessToken) {
                 console.log(`Error: JWT tokens were not created properly`);
-                return res.status(500).json({ error: 'JWT token generation failed' });
+                return res
+                    .status(500)
+                    .json({ error: 'JWT token generation failed' });
             }
 
             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true, // Defend from XSS
                 secure: false, // Only  HTTPS
-                sameSite: 'Strict' // Defend from CSRF
+                sameSite: 'Strict', // Defend from CSRF
                 // maxAge: 7 * 24 * 60 * 60 * 1000, // Alive time
             });
             res.cookie('accessToken', accessToken, {
                 httpOnly: true, // Defend from XSS
                 secure: false, // Only  HTTPS
-                sameSite: 'Strict' // Defend from CSRF
+                sameSite: 'Strict', // Defend from CSRF
                 // maxAge: 2 * 60 * 1000, // Alive time
             });
 
             console.log(`User with this email ${email} successfully logged in`);
-            res.status(200).json({redirectUrl:'/new-main'});
-             
+            res.status(200).json({ redirectUrl: '/new-main' });
         } catch (err) {
             console.log(`Problem with server, cause: ${err}`);
             return res.status(500).json();
@@ -501,13 +517,13 @@ class Controller {
         res.clearCookie('refreshToken', {
             httpOnly: true,
             secure: false,
-            sameSite: 'Strict'
+            sameSite: 'Strict',
             // maxAge: 7 * 24 * 60 * 60 * 1000,
         });
         res.clearCookie('accessToken', {
             httpOnly: true,
             secure: false,
-            sameSite: 'Strict'
+            sameSite: 'Strict',
             // maxAge: 2 * 60 * 1000,
         });
     };
@@ -528,7 +544,7 @@ class Controller {
                     SET refresh_token = NULL
                     WHERE refresh_token = $1 
                     RETURNING *`,
-                [refreshToken]
+                [refreshToken],
             );
             if (response.rowCount > 0) {
                 console.log(`Refresh Token is deleted from Database`);
@@ -536,11 +552,13 @@ class Controller {
                 console.log(`Refresh Token is not deleted from Database`);
             }
             this.clearCookies(res);
-            console.log(`Redirecting user to checkUser`)
-            return res.status(200).json({redirectUrl:'/checkUser'});
+            console.log(`Redirecting user to checkUser`);
+            return res.status(200).json({ redirectUrl: '/checkUser' });
         } catch (err) {
             console.error(`Logout process failed:${err}`);
-            return res.status(500).json({ message: 'Internal server error during logout'});
+            return res
+                .status(500)
+                .json({ message: 'Internal server error during logout' });
         }
     };
 
@@ -560,14 +578,14 @@ class Controller {
                 (err, decoded) => {
                     if (err) {
                         console.log(`The Access Token is not valid`);
-                         return this.refreshAccessToken(req, res, next);
+                        return this.refreshAccessToken(req, res, next);
                     }
                     const { username, email } = decoded;
                     req.username = username;
                     req.email = email;
                     console.log(`The Access Token is valid`);
                     next();
-                }
+                },
             );
         } catch (err) {
             console.log(
@@ -597,7 +615,7 @@ class Controller {
             } catch (err) {
                 console.log(`Decoding users refresh token is failed: ${err}`);
                 const response = await pool.query(
-                   `UPDATE "JWTRefreshToken" 
+                    `UPDATE "JWTRefreshToken" 
                     SET refresh_token = NULL
                     WHERE refresh_token = $1 
                     RETURNING *`,
@@ -606,7 +624,7 @@ class Controller {
                 if (response.rowCount > 0) {
                     console.log(`Refresh Token is deleted from Database`);
                 } else {
-                    console.log(`Refresh Token is not deleted from Database`,);
+                    console.log(`Refresh Token is not deleted from Database`);
                 }
                 this.clearCookies(res);
                 return res.redirect('/checkUser');
@@ -617,7 +635,8 @@ class Controller {
             );
 
             //Check if this RefreshToken exists in the Database
-            const checkTokenPayload = await pool.query(`
+            const checkTokenPayload = await pool.query(
+                `
             SELECT jt.reftoken_id 
             FROM "JWTRefreshToken" jt 
             JOIN "Users" u 
@@ -640,18 +659,20 @@ class Controller {
                     username,
                     email,
                     iat: Math.floor(Date.now() / 1000), // Time when Token was created
-                    exp: Math.floor(Date.now() / 1000) + 7 * 60 // Time when Token will unvalid
+                    exp: Math.floor(Date.now() / 1000) + 7 * 60, // Time when Token will unvalid
                 },
                 process.env.ACCESSJWTTOKEN,
             );
-            console.log(`New Access Token: ${accessToken} generated for user: ${username}, email: ${email}`);
+            console.log(
+                `New Access Token: ${accessToken} generated for user: ${username}, email: ${email}`,
+            );
             res.cookie('accessToken', accessToken, {
                 httpOnly: true, // Defend from XSS
                 secure: false, // Only  HTTPS
-                sameSite: 'Strict'// Defend from CSRFDFF
+                sameSite: 'Strict', // Defend from CSRFDFF
                 // maxAge: 2 * 60 * 1000, // Alive time
             });
-            req.cookies.accessToken = accessToken
+            req.cookies.accessToken = accessToken;
             await this.checkValidityAccessToken(req, res, next);
             res.status(200);
             // res.status(200).json({ message: 'Access token refreshed' });
@@ -661,6 +682,100 @@ class Controller {
             );
             res.status(500).json({
                 message: 'Problem with Refreshing Tokens',
+                error: err.message,
+            });
+        }
+    };
+    //Reset Passwordd Email HTML Content
+    resentPasswordEmailContent = (reset_code) => {
+        return `
+      <div class="container">
+        <div class="email-content">
+            <h1>Password Change Request</h1>
+            <p>Hello,</p>
+            <p>We received a request to change the password for your account. To proceed, please use the following reset code:</p>
+            
+            <p class="reset-code">{{reset_code}}</p> <!-- This will be replaced with the actual reset code -->
+
+            <p>If you didn't request a password change, you can ignore this email. The code is only valid for a limited time.</p>
+
+            <p>To continue resetting your password, click the button below:</p>
+            <a href="http://localhost:3500/" class="btn">Reset My Password</a> <!-- This will be replaced with the actual reset URL -->
+
+            <p>If the button doesn't work, you can copy and paste the link below into your browser:</p>
+            <p>http://localhost:3500/</p>
+
+            <p>If you need help, feel free to contact our support team.</p>
+            <p>Thanks, <br> Your Company Name</p>
+        </div>
+
+        <div class="footer">
+            <p>This email was sent by Your Company Name. If you did not request a password change, please disregard this message.</p>
+        </div>
+    </div>
+      `;
+    };
+
+    //Reset Password
+    resetPasswordSentEmail = async (req, res) => {
+        const { resentPasswordEmail } = req.body;
+        if (!resentPasswordEmail) {
+            console.log(`Email is required`);
+            return res.status(400).json({ message: 'Email is required' });
+        }
+
+        function generateSecureCode() {
+            return crypto.randomInt(100000, 1000000).toString();
+        }
+
+        try {
+            const userInf = await pool.query(
+                `SELECT * FROM "Users" WHERE email = $1`,
+                [resentPasswordEmail],
+            );
+
+            if (userInf.rowCount === 0) {
+                console.log(`User with this email is not found`);
+                return res.status(200).json({ message: 'User not found' });
+            }
+
+            const codeForEmail = generateSecureCode();
+            console.log(`Generated code for email: ${codeForEmail}`);
+
+     const saveInf = await pool.query(
+         `WITH upsert AS (
+         INSERT INTO "ResetPassword" (reset_code)
+         VALUES ($1)
+         ON CONFLICT (reset_code) DO UPDATE
+         SET reset_code = EXCLUDED.reset_code
+         RETURNING reset_password_id)
+         
+         UPDATE "Users"
+         SET reset_password_id = (SELECT reset_password_id FROM upsert LIMIT 1)
+         WHERE email = $2 RETURNING user_id`,
+         [codeForEmail, resentPasswordEmail]);
+         
+         if (saveInf.rowCount === 0) {
+            console.log(`Saving reset code in Data Base failed`);
+            return res.status(400).json({ message: 'Failed to save reset code' });
+            }
+
+            const emailContent = this.resentPasswordEmailContent(codeForEmail);
+            await this.sendingEmail(
+                resentPasswordEmail,
+                'Reset Password',
+                emailContent,
+            );
+
+            console.log(`Reset email successfully sent`);
+
+            return res.status(200).json({ message: 'Email sent successfully' });
+        } catch (err) {
+            console.log(
+                `Problem with Reset Password Sending Email: ${err.message}`,
+            );
+            res.status(500).json({
+                message: 'Problem with Reset Password Sending Email',
                 error: err.message,
             });
         }

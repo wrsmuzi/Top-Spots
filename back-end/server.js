@@ -7,6 +7,8 @@ const session = require('express-session');
 const passport = require('./passport.js'); 
 const cookieParser = require('cookie-parser');
 require('dotenv').config({ path: path.resolve(__dirname, './privateInf.env') });
+const reviewsRoutes = require('./router-reviews.js'); // ✅ змінено на router-файл
+app.use('/api', reviewsRoutes);
 
 app.use(cors({
     origin: 'http://localhost:3000',

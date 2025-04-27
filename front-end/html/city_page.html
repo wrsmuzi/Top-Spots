@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Місто</title>
+  <link rel="stylesheet" href="../styles/city_page.css">
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body>
+
+  <div id="container">
+    <h1 id="place-name"></h1>
+    <p id="description"></p>
+
+    <div id="map" style="height: 400px;"></div>
+
+    <div id="photos" class="photos-grid"></div>
+
+    <section id="reviews-section">
+      <h2>Відгуки</h2>
+      <div id="reviews"></div>
+
+      <h3>Залишити відгук</h3>
+      <form id="review-form">
+        <input type="text" id="user-name" placeholder="Ваше ім'я" required>
+        <select id="rating">
+          <option value="5">5 ★★★★★</option>
+          <option value="4">4 ★★★★</option>
+          <option value="3">3 ★★★</option>
+          <option value="2">2 ★★</option>
+          <option value="1">1 ★</option>
+        </select>
+        <textarea id="comment" placeholder="Ваш коментар" required></textarea>
+        <button type="submit">Надіслати</button>
+      </form>
+    </section>
+  </div>
+
+  <script src="../js/city_page.js"></script>
+
+</body>
+</html>

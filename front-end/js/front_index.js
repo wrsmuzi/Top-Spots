@@ -1,34 +1,41 @@
+// Пошук елементів
 const searchInput = document.getElementById("searchInput");
+const searchButton = document.querySelector(".search-button");
+
+// Створення списку підказок
 const suggestionsList = document.createElement("ul");
 suggestionsList.id = "suggestionsList";
 document.querySelector(".search-bar").appendChild(suggestionsList);
-// БРО Я ТУТ ВСЕ ПОПІДПИСУЮ ЩОБ НЕ ПЛУТАТИСЬ 
-let lastRequestTime = 0; // Час останнього запиту
+
+// Час останнього запиту
+let lastRequestTime = 0;
 
 // Спочатку ховаємо список
 suggestionsList.style.display = "none"; 
 
+// Обробка введення в поле пошуку
 searchInput.addEventListener("input", async (e) => {
     const query = e.target.value.trim();
     
-    // Показуємо список лише якщо введено хоча б 2 символи
     if (query.length < 2) {
-        suggestionsList.innerHTML = "";  // Очистка списку
-        suggestionsList.style.display = "none"; // Сховати список
+        suggestionsList.innerHTML = "";  
+        suggestionsList.style.display = "none"; 
         return;
     }
 
     const currentTime = Date.now();
     if (currentTime - lastRequestTime < 1000) { 
-        return; // Чекаємо 1 секунду перед новим запитом
+        return;
     }
     lastRequestTime = currentTime;
 
     const results = await searchCity(query);
     showSuggestions(results);
 });
+
+// Пошук міста через Nominatim API
 async function searchCity(query) {
-    const url = `https://nominatim.openstreetmap.org/search?q=${query}&format=json&addressdetails=1&laccept-language=uk&countrycodes=UA`;
+    const url = `https://nominatim.openstreetmap.org/search?q=${query}&format=json&addressdetails=1&accept-language=uk&countrycodes=UA`;
     try {
         const response = await fetch(url, {
             headers: {
@@ -43,29 +50,64 @@ async function searchCity(query) {
     }
 }
 
+// Показати підказки
 function showSuggestions(results) {
-    suggestionsList.innerHTML = ""; // Очистка перед новими даними
+    suggestionsList.innerHTML = ""; 
 
-    // Якщо нічого не знайдено
     if (results.length === 0) {
         suggestionsList.innerHTML = "<li class='no-results'>Нічого не знайдено</li>";
     } else {
         results.forEach(result => {
             const li = document.createElement("li");
-            li.textContent = result.display_name; // Назва місця
-            li.addEventListener("click", () => selectSuggestion(result)); // Вибір місця
+            li.textContent = result.display_name;
+            li.addEventListener("click", () => selectSuggestion(result));
             suggestionsList.appendChild(li);
         });
     }
 
-    // Показуємо список після заповнення результатами
     suggestionsList.style.display = "block"; 
-    suggestionsList.classList.add("show"); // Додаємо клас для анімації
+    suggestionsList.classList.add("show");
 }
 
+// Вибір підказки
 function selectSuggestion(result) {
-    searchInput.value = result.display_name; // Вставляємо вибране місце
-    suggestionsList.innerHTML = ""; // Ховаємо випадаючий список
-    suggestionsList.style.display = "none"; // Сховати список після вибору
-    suggestionsList.classList.remove("show"); // Прибираємо клас анімації
+    searchInput.value = result.display_name;
+    suggestionsList.innerHTML = "";
+    suggestionsList.style.display = "none";
+    suggestionsList.classList.remove("show");
+
+    const cityName = encodeURIComponent(
+        result.address.city ||
+        result.address.town ||
+        result.address.village ||
+        result.address.county ||
+        result.display_name.split(",")[0]
+    );
+
+    window.location.href = `html/city_page.html?city=${cityName}`;
 }
+
+// Обробка кліку на кнопку "Search"
+searchButton.addEventListener("click", async () => {
+    const query = searchInput.value.trim();
+    if (query.length < 2) {
+        alert('Введіть назву міста.');
+        return;
+    }
+
+    const results = await searchCity(query);
+
+    if (results.length > 0) {
+        const firstResult = results[0];
+        const cityName = encodeURIComponent(
+            firstResult.address.city ||
+            firstResult.address.town ||
+            firstResult.address.village ||
+            firstResult.address.county ||
+            firstResult.display_name.split(",")[0]
+        );
+        window.location.href = `html/city_page.html?city=${cityName}`;
+    } else {
+        alert('Місто не знайдено.');
+    }
+});

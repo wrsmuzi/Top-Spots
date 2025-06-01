@@ -1,44 +1,80 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Місто</title>
-  <link rel="stylesheet" href="../styles/city_page.css">
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <meta charset="UTF-8" />
+  <title>Інформація про місцевість</title>
+  <link rel="stylesheet" href="../styles/city_page.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    img.photo-item {
+      width: 100%;
+      max-width: 600px;
+      margin: 0.5rem auto;
+      display: block;
+      border-radius: 10px;
+    }
+    li.place-card {
+      margin-bottom: 1rem;
+      border: 1px solid #ddd;
+      padding: 0.5rem;
+      border-radius: 8px;
+    }
+    .review-card {
+      border: 1px solid #ccc;
+      margin-bottom: 1rem;
+      padding: 0.5rem;
+      border-radius: 6px;
+    }
+  </style>
 </head>
 <body>
+    <header>
+    <h1 id="city-name">Місцевість</h1>
+    <p id="city-description">Опис завантажується...</p>
+  </header>
 
-  <div id="container">
-    <h1 id="place-name"></h1>
-    <p id="description"></p>
+  <section id="rating">
+    <h2>Рейтинг</h2>
+    <div id="rating-stars">⭐⭐⭐⭐☆</div>
+  </section>
 
-    <div id="map" style="height: 400px;"></div>
+  <section id="city-photos">
+    <h2>Фото місцевості</h2>
+    <div id="photo-slider"></div>
+  </section>
 
-    <div id="photos" class="photos-grid"></div>
+  <section id="what-to-see">
+    <h2>Що подивитися</h2>
+    <ul id="places-list"></ul>
+  </section>
 
-    <section id="reviews-section">
-      <h2>Відгуки</h2>
-      <div id="reviews"></div>
+  <section id="population">
+    <h2>Населення</h2>
+    <p id="city-population"></p>
+  </section>
 
-      <h3>Залишити відгук</h3>
-      <form id="review-form">
-        <input type="text" id="user-name" placeholder="Ваше ім'я" required>
-        <select id="rating">
-          <option value="5">5 ★★★★★</option>
-          <option value="4">4 ★★★★</option>
-          <option value="3">3 ★★★</option>
-          <option value="2">2 ★★</option>
-          <option value="1">1 ★</option>
-        </select>
-        <textarea id="comment" placeholder="Ваш коментар" required></textarea>
-        <button type="submit">Надіслати</button>
-      </form>
-    </section>
-  </div>
+  <div id="map" style="height: 400px; margin-top: 20px;"></div>
+  
+  <section id="reviews">
+    <h2>Відгуки</h2>
+    <div id="reviews-list"></div>
+  </section>
 
+  <form id="review-form">
+    <h2>Додати відгук</h2>
+    <input type="text" name="placeName" placeholder="Назва місця" required />
+    <select name="placeType" required>
+      <option value="кафе">Кафе</option>
+      <option value="готель">Готель</option>
+      <option value="торговий центр">ТЦ</option>
+      <option value="пам’ятка">Пам’ятка</option>
+    </select>
+    <textarea name="text" placeholder="Ваш відгук" required></textarea>
+    <input type="number" name="rating" min="1" max="5" required />
+    <button type="submit">Надіслати</button>
+  </form>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="../js/city_page.js"></script>
-
 </body>
 </html>

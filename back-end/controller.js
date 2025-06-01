@@ -13,14 +13,8 @@ class Controller {
     pageFullMain = path.join(__dirname, '../Front-end/html/mainpage.html');
     pageError = path.join(__dirname, '../front-end/html/error.html');
     pageAuth = path.join(__dirname, '../front-end/html/authentication.html');
-    pageEmailConfirmation = path.join(
-        __dirname,
-        '../front-end/html/email_confirmation.html',
-    );
-    pageResetPasswordEnterPage = path.join(
-        __dirname,
-        '../front-end/html/reset_password.html',
-    );
+    pageEmailConfirmation = path.join(__dirname,'../front-end/html/email_confirmation.html');
+    pageResetPasswordEnterPage = path.join(__dirname,'../front-end/html/reset_password.html');
 
     //Open Main page
     openBaseMainPage = (req, res) => {

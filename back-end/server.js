@@ -9,7 +9,6 @@ const cookieParser = require('cookie-parser');
 require('dotenv').config({ path: path.resolve(__dirname, './privateInf.env') });
 
 const nominatimRouter = require('./router.nominatim.js');
-const router = require('./router.js');
 const reviewsRouter = require('./router-reviews.js');
 const mapillaryRouter = require('./router.mapilary.js');
 const nearbyApiRouter = require('./router.nearby.js');
@@ -49,5 +48,5 @@ const PORT = process.env.PORT;
 const HOST = process.env.HOST;
 
 app.listen(PORT, () => {
-  console.log(`✅ Server running at http://${HOST}:${PORT}`);
+  console.log(`Server running at http://${HOST}:${PORT}`);
 });

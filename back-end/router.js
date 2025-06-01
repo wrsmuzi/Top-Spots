@@ -1,6 +1,6 @@
 const express = require('express'); 
 const router = express.Router();
-const passport = require('./passport.js'); // 🔥 Додаємо імпорт passport
+const passport = require('passport'); // 🔥 Додаємо імпорт passport
 const Controller = require('./controller.js');
 const controller = new Controller();
 

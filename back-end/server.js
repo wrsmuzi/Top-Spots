@@ -8,6 +8,12 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const cookieParser = require('cookie-parser');
 require('dotenv').config({ path: path.resolve(__dirname, './privateInf.env') });
 
+const nominatimRouter = require('./router.nominatim.js');
+const router = require('./router.js');
+const reviewsRouter = require('./router-reviews.js');
+const mapillaryRouter = require('./router.mapilary.js');
+const nearbyApiRouter = require('./router.nearby.js');
+const wikipediaRouter = require('./router.wikipedia.js');
 app.use(cors({
     origin: 'http://localhost:3500',
     credentials: true,
@@ -42,7 +48,6 @@ app.use('/', router);
 const PORT = process.env.PORT;
 const HOST = process.env.HOST;
 
-app.listen(PORT, HOST, (err) => {
-    if (err) console.log(`Server not working: ${err}`);
-    else console.log(`Server is working on: http://${HOST}:${PORT}`);
+app.listen(PORT, () => {
+  console.log(`✅ Server running at http://${HOST}:${PORT}`);
 });

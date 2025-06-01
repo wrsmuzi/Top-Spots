@@ -3,12 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../styles/auth_styles.css">
+    <link rel="stylesheet" href="/styles/auth_styles.css">
     <title>Aauthentication</title>
-    <style>
-
-
-    </style>
 </head>
 <body>
         <div class="wrapper">
@@ -35,7 +31,7 @@
                     </div>
 
 
-                <div class="main_block auth_active" id="registratioBlock">
+                <div class="main_block validRegLogForm auth_active" id="registratioBlock">
                     <div class="greeting_text_block">
                         <h3 class="greeting_text_01">Create an Account</h3>
                         <p class="greeting_text_02">Start your journey</p>
@@ -83,7 +79,7 @@
                 </div>
                 </div>
                 <!------------------------------------- Log In block ------------------------------------->
-                <div class="main_block auth_inactive" id="loginBlock">
+                <div class="main_block invalidRegLogForm auth_inactive" id="loginBlock">
                     <div class="greeting_text_block">
                         <h3 class="greeting_text_01">Log In your Account</h3>
                         <p class="greeting_text_02">Сontinue your journey</p>
@@ -151,6 +147,10 @@
                                 <input type="email" class="rp_footer_email" name="resentPasswordEmail" placeholder="Enter your email" required> 
                                 <div class="rp_footer_block_for_answer"></div>
                                 <button id="confirmResentPasswordBtn" class="rp_footer_confirm_btn">Confirm</button>
+                                <div class="block_for_resend_code">
+                                    <span class="rp_footer_send_code_again">Didn’t get the code? <button id="tryAgainResentPasswordBtn" disabled class="rp_footer_try_again_btn">Try again <span class="try_again_span"></span></button></span>
+                                </div>
+                               
                             </form>
                             <div class="rp_footer_block_return_to_login">
                                 <div class="rp_footer_return_img_block_btn"><img src="../img/left_arrow_reset_password.png" class="rp_footer_return_img_btn" alt=""></div>
@@ -170,11 +170,8 @@
             <div class="shadow_block_03"></div>
             <div class="shadow_block_04"></div>
         </div>
-   
 
-        
-
-
-<script type="module" src="../js/auth_fr.js"></script>
+<script type="module" src="/js/auth_fr.js"></script>
+</script>
 </body>
 </html>

@@ -5,7 +5,8 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 const pool = require('./database');
-require('dotenv').config({ path: path.resolve(__dirname, './privateInf.env') });
+const passport = require('passport');
+ require('dotenv').config({ path: path.resolve(__dirname, './privateInf.env') });
 
 class Controller {
     pageBaseMain = path.join(__dirname, '../Front-end/html/index.html');
@@ -15,6 +16,10 @@ class Controller {
     pageEmailConfirmation = path.join(
         __dirname,
         '../front-end/html/email_confirmation.html',
+    );
+    pageResetPasswordEnterPage = path.join(
+        __dirname,
+        '../front-end/html/reset_password.html',
     );
 
     //Open Main page
@@ -76,6 +81,25 @@ class Controller {
                     return res.status(400).json();
                 }
                 console.log(`Auth page ssuccessful opened`);
+                res.status(200);
+            });
+        } catch (err) {
+            console.log(`Problem with server or bad request: ${err}`);
+            res.status(500).json();
+        }
+    };
+
+    //Open Reset Password Enter Page
+    openResetPasswordEnterPage = (req, res) => {
+        try {
+            res.sendFile(this.pageResetPasswordEnterPage, (err) => {
+                if (err) {
+                    console.log(
+                        `Problem with sending Reset Password Enter page: ${err}`,
+                    );
+                    return res.status(400).json();
+                }
+                console.log(`Reset Password Enter page ssuccessful opened`);
                 res.status(200);
             });
         } catch (err) {
@@ -195,13 +219,6 @@ class Controller {
                         </div>
                     </td>
                 </tr>
-                <tr align="center" style="background: linear-gradient(to right, #010425, #210275);">
-                   <td>
-                        <div style="width: 100px; height: 100px;">
-                           <img src="https://imgur.com/LwI45Wj.png" alt="" style="width: 100%; height: 100%;">
-                        </div>
-                   </td>
-                 </tr>
                  <tr >
                     <td style="padding: 0px 5% 8% 5%; color: #000;" >
                        <table> 
@@ -212,17 +229,17 @@ class Controller {
                              </tr>
                              <tr>
                                 <td >
-                                   <p style="font-size: 20px; letter-spacing: 1.5px; color: #000;">Hi <span style="color:rgb(22, 0, 80);">${username}</span>, <br> <span style="font-size: 20px; letter-spacing: 1.5px; color: #000;">you're almost set to start enjoying our service. Simply click the link below to verify your email address and get started. The link expires in 24 hours.</span></p>
+                                   <p style="font-size: 18px; letter-spacing: 1.5px; color: #000;">Hi <span style="color:rgb(22, 0, 80);" font-size: 18px;>${username}</span>, <br> <span style="font-size: 20px; letter-spacing: 1.5px; color: #000;">you're almost set to start enjoying our service. Simply click the link below to verify your email address and get started. The link expires in 24 hours.</span></p>
                                 </td>
                              </tr>
                              <tr align="center">
                                 <td style="padding: 15px 0px;">
-                                   <a href="http://localhost:3500/api/verify-email?token=${token}"  style="background: linear-gradient(to right, #010425, #210275); padding: 1.5% 3.5%; letter-spacing: 2px; color:#eeeeee; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; font-size: 20px; font-weight: 550; text-decoration: none;">Verify my Email</a>
+                                   <a href="http://localhost:3500/api/verify-email?token=${token}"  style="background: linear-gradient(to right,rgb(19, 19, 19),rgb(12, 66, 165)); padding: 2.5% 4.5%; border-radius: 10px; letter-spacing: 2px; color:#eeeeee; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; font-size: 20px; font-weight: 550; text-decoration: none;">Verify my Email</a>
                                 </td>
                              </tr>
                              <tr>
                                 <td style="padding-top: 10px;">
-                                <p style="font-size: 18px; letter-spacing: 1.5px; font-weight: 500;">If you did not request this email verification, please ignore this message. No further action is required.</p>
+                                <p style="font-size: 16px; letter-spacing: 1.5px; font-weight: 500;">If you did not request this email verification, please ignore this message. No further action is required.</p>
                                 </td>
                              </tr>
                              <tr align="center">
@@ -325,18 +342,7 @@ class Controller {
                     .status(500)
                     .json({ error: 'JWT token generation failed' });
             }
-            res.cookie('refreshToken', refreshToken, {
-                httpOnly: true, // Defend from XSS
-                secure: false, // Only  HTTPS
-                sameSite: 'Strict', // Defend from CSRF
-                // maxAge: 7 * 24 * 60 * 60 * 1000, // Alive time
-            });
-            res.cookie('accessToken', accessToken, {
-                httpOnly: true, // Defend from XSS
-                secure: false, // Only  HTTPS
-                sameSite: 'Strict', // Defend from CSRF
-                // maxAge: 2 * 60 * 1000, // Alive time
-            });
+           this.createCookies(res, refreshToken, accessToken);
 
             // res.status(200).json({accessToken})
             res.redirect('/email-confirmition');
@@ -397,7 +403,7 @@ class Controller {
         );
         if (existUser.rowCount > 0) {
             console.log(
-                `User with this email or phone number ${existUser.rows[0].email} are already exist,`,
+                `User with this email or phone number ${existUser.rows[0].email} are already exist`,
             );
             return res.status(409).json({ createdEmail: 'error@gmail.com' });
         }
@@ -419,10 +425,11 @@ class Controller {
                 res.status(500).json();
                 return;
             }
+            const provider = 'local';
             //Creating/Sending User and EVToken in database
             const creatingUser = await pool.query(
-                `INSERT INTO "Users" (username, email, password, evtoken_id, remember_me) VALUES ($1, $2, $3, $4, $5) RETURNING user_id`,
-                [username, email, hashedPassword, EVToken, remember],
+                `INSERT INTO "Users" (username, email, password, evtoken_id, remember_me, provider) VALUES ($1, $2, $3, $4, $5, $6) RETURNING user_id`,
+                [username, email, hashedPassword, EVToken, remember, provider],
             );
             if (creatingUser.rowCount === 0) {
                 console.log(
@@ -492,18 +499,7 @@ class Controller {
                     .json({ error: 'JWT token generation failed' });
             }
 
-            res.cookie('refreshToken', refreshToken, {
-                httpOnly: true, // Defend from XSS
-                secure: false, // Only  HTTPS
-                sameSite: 'Strict', // Defend from CSRF
-                // maxAge: 7 * 24 * 60 * 60 * 1000, // Alive time
-            });
-            res.cookie('accessToken', accessToken, {
-                httpOnly: true, // Defend from XSS
-                secure: false, // Only  HTTPS
-                sameSite: 'Strict', // Defend from CSRF
-                // maxAge: 2 * 60 * 1000, // Alive time
-            });
+           this.createCookies(res, refreshToken, accessToken);
 
             console.log(`User with this email ${email} successfully logged in`);
             res.status(200).json({ redirectUrl: '/new-main' });
@@ -517,14 +513,27 @@ class Controller {
         res.clearCookie('refreshToken', {
             httpOnly: true,
             secure: false,
-            sameSite: 'Strict',
+            sameSite: 'Lax',
             // maxAge: 7 * 24 * 60 * 60 * 1000,
         });
         res.clearCookie('accessToken', {
             httpOnly: true,
             secure: false,
-            sameSite: 'Strict',
+            sameSite: 'Lax',
             // maxAge: 2 * 60 * 1000,
+        });
+    };
+     //Create Cookies
+     createCookies = (res, refreshToken, accessToken) => {
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true, // Defend from XSS
+            secure: false, // Only  HTTPS
+            sameSite: 'Lax', // Defend from CSRF
+        });
+        res.cookie('accessToken', accessToken, {
+            httpOnly: true, // Defend from XSS
+            secure: false, // Only  HTTPS
+            sameSite: 'Lax', // Defend from CSRF
         });
     };
     //Log Out
@@ -687,36 +696,76 @@ class Controller {
         }
     };
     //Reset Passwordd Email HTML Content
-    resentPasswordEmailContent = (reset_code) => {
+    resentPasswordEmailContent = (username, reset_code) => {
         return `
-      <div class="container">
-        <div class="email-content">
-            <h1>Password Change Request</h1>
-            <p>Hello,</p>
-            <p>We received a request to change the password for your account. To proceed, please use the following reset code:</p>
-            
-            <p class="reset-code">{{reset_code}}</p> <!-- This will be replaced with the actual reset code -->
-
-            <p>If you didn't request a password change, you can ignore this email. The code is only valid for a limited time.</p>
-
-            <p>To continue resetting your password, click the button below:</p>
-            <a href="http://localhost:3500/" class="btn">Reset My Password</a> <!-- This will be replaced with the actual reset URL -->
-
-            <p>If the button doesn't work, you can copy and paste the link below into your browser:</p>
-            <p>http://localhost:3500/</p>
-
-            <p>If you need help, feel free to contact our support team.</p>
-            <p>Thanks, <br> Your Company Name</p>
-        </div>
-
-        <div class="footer">
-            <p>This email was sent by Your Company Name. If you did not request a password change, please disregard this message.</p>
-        </div>
+     <body style="font-family: Arial, sans-serif; background-color: #f4f6f8; margin: 0; padding: 0;">
+     <table role="presentation" cellspacing="0" cellpadding="0" align="center" style="width: 100%;">
+                <tr align="center" style="background-color: #000;">
+                    <td>
+                       <div style="width: 25%; height: 20%;">
+                           <img src="https://imgur.com/r43Fdc9.png" alt="" style="width: 100%; height: 100%;">
+                        </div>
+                    </td>
+                </tr>
+            </table>
+     <div class="container" style="max-width: 600px; margin: 20px auto; background-color:rgb(255, 255, 255); padding: 30px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); color: #333333;">
+     <div class="header" style="text-align: center; border-bottom: 1px solid #eee; padding-bottom: 20px; margin-bottom: 30px;">
+     <h1 style="margin: 0; color: #2c3e50;">Password Change Request</h1>
     </div>
+    <div class="content" style="line-height: 1.6; font-size: 14px;">
+      <p style="font-size: 16px; color:rgb(0, 0, 0); ">Hello <span style="color: #003366;">${username}</span>,</p>
+      <p style="font-size: 16px; color:rgb(0, 0, 0);">We received a request to reset the password for your account.</p>
+      <p style="font-size: 16px; color:rgb(0, 0, 0);">If this was you — great! Use the code below to proceed:</p>
+
+      <div class="reset-code" style="font-size: 24px;
+      font-weight: bold;
+      background-color: #F4F4F4;
+      padding: 12px 20px;
+      text-align: center;
+      border-radius: 8px;
+      margin: 20px 0;
+      color: #003366;
+      letter-spacing: 3px;">${reset_code}</div>
+
+      <p style="color:rgb(0, 0, 0);">This code is valid for a limited time and should be used only once.</p>
+
+      <p style="color:rgb(0, 0, 0);">To continue resetting your password, click the button below:</p>
+      <div style="text-align: center;" >
+      <a class="button" style="display: inline-block;
+      padding: 14px 24px;
+      background-color: #005288;
+      color: white;
+      leter-spacing: 1.2 px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      margin: 20px 0;" href="http://localhost:3500/api/resetPasword/OpenEnterPage">Reset My Password</a>
+      </div>   
+      
+      <p style="color:rgb(0, 0, 0);">If the button doesn’t work, copy and paste the following link into your browser:</p>
+      <p class="link" style="word-break: break-word;
+      color: #005288;">http://localhost:3500/api/resetPasword/OpenEnterPage</p>
+
+      <p style="color:rgb(0, 0, 0);">If you did not request this change, please ignore this message. Your account remains secure.</p>
+
+      <p style="color:rgb(0, 0, 0);">Need help? Contact our support team — we’re here for you!</p>
+
+      <p style="color:rgb(0, 0, 0);">Best regards,<br><strong>Top Spots Team</strong></p>
+    </div>
+    <div class="footer" style="font-size: 13px;
+      color: #888888;
+      margin-top: 30px;
+      border-top: 1px solid #eee;
+      padding-top: 20px;
+      text-align: center;">
+      <p style="color:rgb(114, 114, 114);">This email was sent by Top Spots. If you didn’t request a password change, no further action is needed.</p>
+    </div>
+  </div>
+</body>
       `;
     };
 
-    //Reset Password
+    //Reset Password Sending Email to User
     resetPasswordSentEmail = async (req, res) => {
         const { resentPasswordEmail } = req.body;
         if (!resentPasswordEmail) {
@@ -740,27 +789,35 @@ class Controller {
             }
 
             const codeForEmail = generateSecureCode();
+            const expiresTime = new Date(Date.now() + 1.5 * 60 * 1000);
             console.log(`Generated code for email: ${codeForEmail}`);
 
-     const saveInf = await pool.query(
-         `WITH upsert AS (
-         INSERT INTO "ResetPassword" (reset_code)
-         VALUES ($1)
+            const saveInf = await pool.query(
+                `WITH upsert AS (
+         INSERT INTO "ResetPassword" (reset_code, expires_time)
+         VALUES ($1, $3)
          ON CONFLICT (reset_code) DO UPDATE
-         SET reset_code = EXCLUDED.reset_code
+         SET reset_code = EXCLUDED.reset_code, expires_time = EXCLUDED.expires_time
          RETURNING reset_password_id)
          
          UPDATE "Users"
          SET reset_password_id = (SELECT reset_password_id FROM upsert LIMIT 1)
-         WHERE email = $2 RETURNING user_id`,
-         [codeForEmail, resentPasswordEmail]);
-         
-         if (saveInf.rowCount === 0) {
-            console.log(`Saving reset code in Data Base failed`);
-            return res.status(400).json({ message: 'Failed to save reset code' });
+         WHERE email = $2 RETURNING username`,
+                [codeForEmail, resentPasswordEmail, expiresTime],
+            );
+
+            if (saveInf.rowCount === 0) {
+                console.log(`Saving reset code in Data Base failed`);
+                return res
+                    .status(400)
+                    .json({ message: 'Failed to save reset code' });
             }
 
-            const emailContent = this.resentPasswordEmailContent(codeForEmail);
+            const username = saveInf.rows[0].username;
+            const emailContent = this.resentPasswordEmailContent(
+                username,
+                codeForEmail,
+            );
             await this.sendingEmail(
                 resentPasswordEmail,
                 'Reset Password',
@@ -779,6 +836,160 @@ class Controller {
                 error: err.message,
             });
         }
+    };
+
+    //Reset Password Check Validity of Verification Code
+    checkVerificationCode = async (req, res) => {
+        const { resetCode } = req.body;
+        if (!resetCode) {
+            console.log(
+                `Check Verification Code Function didn't receive any data`,
+            );
+            return res.status(400).json();
+        }
+
+        const codeFromDatabase = await pool.query(
+            `SELECT * FROM "ResetPassword" WHERE reset_code = ($1)`,
+            [resetCode],
+        );
+        if (codeFromDatabase.rowCount == 0) {
+            console.log(`Code is Not verificated, user can't change password`);
+            return res.status(404).json();
+        }
+        const expiresTime = codeFromDatabase.rows[0].expires_time;
+        if (Date.now() > new Date(expiresTime).getTime()) {
+            console.log(`Reset code has expired`);
+            const deleteResetCode = await pool.query(
+                `DELETE FROM "ResetPassword" WHERE reset_code = $1`,
+                [resetCode],
+            );
+            if (deleteResetCode.rowCount == 0)
+                console.log(`Deleting expired reset code was failed`);
+            return res.status(410).json();
+        }
+
+        console.log(`Code is verificated, user can change password`);
+        return res.status(200).json();
+    };
+
+    //Reset Password Creating new Password
+    creatingNewPassword = async (req, res) => {
+        const { newPassword01, resetCode } = req.body;
+        const saltLvl = 10;
+
+        if (!newPassword01 || !resetCode) {
+            console.log(
+                `Creating New Password havn't recive new password or reset code`,
+            );
+            return res.status(403).json();
+        }
+        try {
+            const resetPasswordId = await pool.query(
+                `SELECT reset_password_id FROM "ResetPassword" WHERE reset_code = $1`,
+                [resetCode],
+            );
+            if (resetPasswordId.rowCount == 0) {
+                console.log(`User not found for updating password`);
+                return res.status(404).json();
+            }
+            const resetPasswordCodeId =
+                resetPasswordId.rows[0].reset_password_id;
+            const hashedPassword = await bcrypt.hash(newPassword01, saltLvl);
+            const updatingPassword = await pool.query(
+                `UPDATE "Users" SET password = $1 WHERE reset_password_id = $2 RETURNING user_id`,
+                [hashedPassword, resetPasswordCodeId],
+            );
+            if (updatingPassword.rowCount == 0) {
+                console.log(`Updating new Password in database was failed`);
+                return res.status(404).json();
+            }
+
+            console.log(`New Password is updated`);
+            res.status(200).json();
+            return;
+        } catch (err) {
+            console.log(`Problem with server, cause: ${err.message}`);
+            return res.status(500).json();
+        }
+    };
+
+    //Reset Password Deleting Reset Code
+    deletingResetCode = async (req, res) => {
+        const code = req.body.resetCode;
+
+        const deleteResetCode = await pool.query(
+            `DELETE FROM "ResetPassword" WHERE reset_code = $1`,
+            [code],
+        );
+        if (deleteResetCode.rowCount == 0) {
+            console.log(`Deleting expired reset code was failed`);
+            return res.status(200).json({ redirectTo: '/checkUser' });
+        }
+        console.log(`Deleting expired reset code was successful`);
+        return res.status(200).json({ redirectTo: '/checkUser' });
+    };
+
+    //Authentification with Google, Send user to Google
+    openGoogleAuth = () => {
+       return passport.authenticate('google', { scope : ['profile', 'email']})
+    }
+
+    //Authentification with Google, Get user from Google
+    getGoogleDataAuth = (req, res, next) => {
+        passport.authenticate('google', { session: false, failureRedirect: '/checkUser' }, async (err, user, info) =>{
+            if(err | !user) return res.redirect('/checkUser');
+            const { id:googleId, displayName:name, emails } = user;
+            const email = emails?.[0]?.value;
+            const provider = 'google';
+            const rememberMe = true;
+            const isVerified = true;
+
+            const searchForGoogleId = await pool.query (`SELECT * FROM "Users" WHERE google_id = $1`, [googleId]);
+            if(searchForGoogleId.rowCount > 0){
+                const { refreshToken, accessToken } = await this.creatingJwtAccRefTokens(name, email, rememberMe)
+                if (!refreshToken || !accessToken) {
+                    console.log(`Error: JWT tokens were not created properly in searchForGoogleId function`);
+                    return res.redirect('/checkUser')
+                }
+                this.createCookies(res, refreshToken, accessToken);
+                console.log(`User logged in via Google`);
+                return res.redirect('/new-main');
+            };
+
+            const searchForEmail = await pool.query (`SELECT * FROM "Users" WHERE email = $1`, [email]);
+            if(searchForEmail.rowCount > 0){
+                const changeUserDataInDb = await pool.query(`UPDATE "Users" SET google_id = $1 WHERE email = $2 RETURNING user_id`, [googleId, email]);
+                if(changeUserDataInDb.rowCount == 0){
+                    console.log(`Changing users data in searching user via email was failed`)
+                    return res.redirect('/checkUser')
+                }
+                const { refreshToken, accessToken } = await this.creatingJwtAccRefTokens(name, email, rememberMe)
+                if (!refreshToken || !accessToken) {
+                    console.log(`Error: JWT tokens were not created properly in searchForEmail function`);
+                    return res.redirect('/checkUser')
+                }
+                this.createCookies(res, refreshToken, accessToken);
+                console.log(`User account merged: Google ID linked to existing email ${email} was successfully`);
+                return res.redirect('/new-main');
+            }else{
+                const createNewUserGoogle = await pool.query(
+                    `INSERT INTO "Users" (username, email, is_verified, remember_me, google_id, provider) VALUES ($1, $2, $3, $4, $5, $6) RETURNING user_id`,
+                    [name, email, isVerified, rememberMe, googleId, provider]
+                );
+                if(createNewUserGoogle.rowCount == 0){
+                    console.log(`Creating new user in createNewUserGoogle was failed`);
+                    return res.redirect('/checkUser')
+                }
+                const { refreshToken, accessToken } = await this.creatingJwtAccRefTokens(name, email, rememberMe)
+                if (!refreshToken || !accessToken) {
+                    console.log(`Error: JWT tokens were not created properly in createNewUserGoogle function`);
+                    return res.redirect('/checkUser')
+                }
+                this.createCookies(res, refreshToken, accessToken);
+                console.log(`Creating new user via Google was successfully`);
+                res.redirect('/new-main');
+            };
+        })(req, res, next);
     };
 }
 

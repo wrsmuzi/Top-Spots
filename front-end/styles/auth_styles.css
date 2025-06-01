@@ -511,7 +511,7 @@ input[type="checkbox"] {
     visibility: hidden;
 }
 
-/* ----------------------------------------Registration form moving----------------------------------------------------------------- */
+/* ----------------------------------------Registration/Loading form moving----------------------------------------------------------------- */
 .invalidRegLogForm{
     opacity: 0;
     visibility: hidden;
@@ -658,12 +658,12 @@ input[type="checkbox"] {
 /* ---------------------------------------------------------------------------------------------- */
 .inactive_loading_block{
     opacity: 0;
-    overflow: hidden;
+    visibility: hidden;
 }
 .active_loading_block{
     opacity: 1;
     transition: all 1s;
-    overflow: visible;
+    visibility: visible;
 }
 .block_for_all_loading_animation{
     height: 100%;
@@ -770,7 +770,6 @@ input[type="checkbox"] {
     font-size: 17px;
     letter-spacing: 2px;
     padding: 3% 4%;
-    border-radius: 10px;
     border-color: #bfbfbf;
     border-width: 2px;
     border-style: solid;
@@ -803,7 +802,7 @@ input[type="checkbox"] {
     border-style: solid; */
     font-size: 20px;
     width: 100%;
-    background-color: #000;
+    background-color: #000000;
     color: #eeeeee;
     padding: 10px 0;
     letter-spacing: 2px;
@@ -825,6 +824,29 @@ input[type="checkbox"] {
     transform: scale(0.98);
 
 
+}
+.block_for_resend_code{
+    text-align: center;
+    margin-bottom: 1%;
+}
+.rp_footer_send_code_again {
+    letter-spacing: 1.2px;
+    font-size: 16px;
+    color: #012327;
+    font-weight: 600;
+
+}
+.rp_footer_try_again_btn {
+    background-color: #ccedf500;
+    letter-spacing: 1px;
+    font-size: 16px;
+    color: #15a3c7;
+    font-weight: 650;
+    transition: all 1s;
+    pointer-events: none;
+}
+.rp_footer_try_again_btn:hover{
+    text-shadow: 0px 0px 3px #0000008f;
 }
 .rp_footer_block_return_to_login {
     /* padding-right: 17.2%; */
@@ -913,4 +935,6 @@ input[type="checkbox"] {
     letter-spacing: 1px;
     padding: 0px 0px 15px 0px;
 }
-
+.rp_footer_try_again_btn span{
+    color: black;
+ }

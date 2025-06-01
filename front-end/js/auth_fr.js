@@ -3,7 +3,7 @@ const Functions = new authFunctionsHandler()
 
 
 //---------------LOG IN--------------------------------------------
-const loginForm=document.getElementById('Login_form')
+const loginForm = document.getElementById('Login_form')
 loginForm.addEventListener('submit', async (event)=>{
     event.preventDefault()
     
@@ -40,36 +40,75 @@ signUpForm.addEventListener('submit', async(event)=>{
     const rememberMe = document.getElementById('rememberMeReg').checked;
     const {username, email, password}= inputValues
     inputValues.remember = rememberMe;
+    const signupAnswer = document.querySelector('.block_for_answer_reg');
 
-    if(!username?.trim() || !email?.trim() || !password?.trim()){
-        const signupAnswer = document.querySelector('.block_for_answer_reg')
-        return signupAnswer.innerHTML=`<h1 class="answer_text">Usernaame, login and password are required</h1>`
+    if(!username?.trim() || !email?.trim() || !password?.trim()) return signupAnswer.innerHTML=`<h1 class="answer_text">Usernaame, login and password are required</h1>`;
+
+    if (password.length <= 8) {
+        console.log(`Oops! Your password needs to be at least 8 characters`);
+         signupAnswer.innerHTML = `<h1 class="answer_text">Your password is a bit short — try 8 characters or more</h1>`;
+         return;
     }
+
     Functions.loadingRegAnimation()
     const sendingData = await Functions.sendSignUp(inputValues)
 })
 
 //---------------RESET PASSWORD--------------------------------------------
-const resetPasswordForm = document.getElementById('Resent_Password_Form');
-resetPasswordForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
+    const resetPasswordForm = document.getElementById('Resent_Password_Form');
+    resetPasswordForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
 
-    if (!resetPasswordForm.checkValidity()) {
-        return console.log(`Reset Password form is not valid`);
-    }
+        if (!resetPasswordForm.checkValidity()) {
+            return console.log(`Reset Password form is not valid`);
+        }
 
-    const formObj = new FormData(resetPasswordForm);
-    const resetPasswordObj = Object.fromEntries(formObj.entries());
-    const { resentPasswordEmail } = resetPasswordObj;
+        const formObj = new FormData(resetPasswordForm);
+        const resetPasswordObj = Object.fromEntries(formObj.entries());
+        const { resentPasswordEmail } = resetPasswordObj;
 
-    if (!resentPasswordEmail.trim()) {
-        const blockForAnswer = document.querySelector(`.rp_footer_block_for_answer`);
-        return blockForAnswer.innerHTML = `<h1 class="rp_footer_answer_text">Email is required</h1>`;
-    }
+        if (!resentPasswordEmail.trim()) {
+            const blockForAnswer = document.querySelector(`.rp_footer_block_for_answer`);
+            return blockForAnswer.innerHTML = `<h1 class="rp_footer_answer_text">Email is required</h1>`;
+        }
 
-    Functions.loadingRegAnimation();
-    const sendingEmail = await Functions.sendResetPasswordEmail(resetPasswordObj);
-});
+        const confirmBtn = document.getElementById('confirmResentPasswordBtn');
+        confirmBtn.disabled = true;
+        confirmBtn.style.pointerEvents = 'none';
+        confirmBtn.style.backgroundColor = '#242424';
+        
+        const resentBtn = document.getElementById('tryAgainResentPasswordBtn');
+        const blockForTime = document.querySelector('.try_again_span');
+        let timer01 = 21;
+        let timer02 = 61;
+        if (resentBtn.disabled === true) {
+            disableConfirmBtn(timer01, resentBtn, blockForTime);
+        } else {
+            disableConfirmBtn(timer02, resentBtn, blockForTime);
+        }
+       
+        const sendingEmail = await Functions.sendResetPasswordEmail(resetPasswordObj);
+    
+    });
+function disableConfirmBtn(timer, resentBtn, blockForTime) {
+    const timeOutTime = timer;
+    const intervalId = setInterval(() => {
+        timer--;
+        blockForTime.textContent = `in ${timer}s`;
+        resentBtn.style.pointerEvents = 'none';
+        if (timer <= 0) clearInterval(intervalId);
+    }, 1000);
+
+    setTimeout(() => {
+        resentBtn.disabled = false;
+        resentBtn.style.pointerEvents = 'auto';
+        blockForTime.innerHTML = '';
+    }, timeOutTime * 1000); 
+    return
+}
+
+
+
 //------------------------------------ Move Login/Register/Reset Password form-----------------------------------------------
 document.addEventListener('DOMContentLoaded', ()=>{
     const registerForm = document.getElementById('registratioBlock');
@@ -83,6 +122,9 @@ document.addEventListener('DOMContentLoaded', ()=>{
         registerForm.classList.toggle('auth_inactive')
         loginBlock.classList.toggle('auth_inactive')
         loginBlock.classList.toggle('auth_active')
+
+        registerForm.classList.replace('validRegLogForm', 'invalidRegLogForm');
+        loginBlock.classList.replace('invalidRegLogForm', 'validRegLogForm');
   })
 // from login in registration
     const openRegisterBtn = document.getElementById('openRegister')
@@ -91,6 +133,10 @@ document.addEventListener('DOMContentLoaded', ()=>{
         loginBlock.classList.toggle('auth_inactive')
         registerForm.classList.toggle('auth_inactive')
         registerForm.classList.toggle('auth_active')
+
+        loginBlock.classList.replace('validRegLogForm', 'invalidRegLogForm');
+        registerForm.classList.replace('invalidRegLogForm', 'validRegLogForm');
+        
    })
 //from login in reset password
     const resetPassword = document.getElementById('resetPassword'); 
@@ -99,6 +145,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
        loginBlock.classList.toggle('auth_inactive');
        resetPasswordBlock.classList.toggle('auth_active')
        resetPasswordBlock.classList.toggle('auth_inactive')
+
+       loginBlock.classList.replace('validRegLogForm', 'invalidRegLogForm');
    })
 //from reset password in login
     const returnBtn = document.getElementById('returnBtn');
@@ -107,6 +155,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
         loginBlock.classList.toggle('auth_inactive');
         resetPasswordBlock.classList.toggle('auth_active');
         resetPasswordBlock.classList.toggle('auth_inactive');
+
+        loginBlock.classList.replace('invalidRegLogForm', 'validRegLogForm');
     })
 })
 //------------------------------------ Right Side Change Photo-----------------------------------------------
@@ -150,6 +200,10 @@ logCheckVsbBtn.addEventListener('click', () => {
     const blockPassword = "url('../img/closed-Eyes.png')";
     Functions.controllPasswordVisibility(logpasswordField, logCheckVsbBtn, showPassword, blockPassword);
 });
+
+
+
+
 
 
 

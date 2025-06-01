@@ -1,15 +1,15 @@
-const express = require('express')
+const express = require("express");
 const app = express()
 const path = require('path')
 const router = require('./router.js')
 const cors = require('cors');
-const session = require('express-session');
-const passport = require('./passport.js'); 
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const cookieParser = require('cookie-parser');
 require('dotenv').config({ path: path.resolve(__dirname, './privateInf.env') });
 
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: 'http://localhost:3500',
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type,Authorization'
@@ -17,15 +17,19 @@ app.use(cors({
 
 app.use(express.json());
 
-// ✅ Перемістити `session()` вище за `passport.initialize()`
-app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false
-}));
-
 app.use(passport.initialize());
-app.use(passport.session()); 
+passport.use(new GoogleStrategy(
+        {
+            clientID: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            callbackURL: process.env.GOOGLE_CALLBACK_URL
+        },
+        function (accessToken, refreshToken, profile, done) {
+            return done(null, profile);
+        },
+    ),
+);
+
 
 app.use(cookieParser());
 

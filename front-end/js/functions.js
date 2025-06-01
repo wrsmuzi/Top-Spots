@@ -1,3 +1,4 @@
+
 //----------------  Class with functions for auth_fr.js --> authentication.html  -----------------------------------------
  class authFunctionsHandler {
      resentEmail = async (email) => {
@@ -23,23 +24,17 @@
 
      loadingRegAnimation = () => {
          const regBlock = document.getElementById('registratioBlock');
-         const loadingBlock = document.querySelector(
-             '.block_for_all_loading_animation',
-         );
-         regBlock.classList.remove('validRegLogForm');
-         regBlock.classList.add('invalidRegLogForm');
-         loadingBlock.classList.remove('inactive_loading_block');
-         loadingBlock.classList.add('active_loading_block');
+         const loadingBlock = document.querySelector('.block_for_all_loading_animation');
+         regBlock.classList.replace('validRegLogForm', 'invalidRegLogForm');
+         regBlock.classList.remove('auth_active');
+         loadingBlock.classList.replace('inactive_loading_block', 'active_loading_block');
+
      };
      loadingLogAnimation = () => {
          const logBlock = document.getElementById('loginBlock');
-         const loadingBlock = document.querySelector(
-             '.block_for_all_loading_animation',
-         );
-         logBlock.classList.remove('validRegLogForm');
-         logBlock.classList.add('invalidRegLogForm');
-         loadingBlock.classList.remove('inactive_loading_block');
-         loadingBlock.classList.add('active_loading_block');
+         const loadingBlock = document.querySelector('.block_for_all_loading_animation');
+         logBlock.classList.replace('validRegLogForm', 'invalidRegLogForm');
+         loadingBlock.classList.replace('inactive_loading_block', 'active_loading_block');
      };
      //--------------------- Function about Offer to Confirm Email -----------------------------------------------------
      offerToConfirmEmail = async (createdEmail) => {
@@ -83,6 +78,7 @@
              let timer = 30;
              resentBtn.disabled = true;
              resentBtn.style.opacity = 0.5;
+             resentBtn.style.pointerEvents = 'none';
              const counting = setInterval(() => {
                  timer--;
                  blockTimer.innerHTML = `
@@ -91,6 +87,7 @@
                      clearInterval(counting);
                      resentBtn.disabled = false;
                      resentBtn.style.opacity = 1;
+                     resentBtn.style.pointerEvents = 'auto';
                      const timerHtml = document.querySelector('.timer');
                      timerHtml.remove();
                  }
@@ -115,10 +112,9 @@
 
          answerBlock.innerHTML = '';
 
-         loadingBlock.classList.remove('active_loading_block');
-         loadingBlock.classList.add('inactive_loading_block');
-         regBlock.classList.remove('invalidRegLogForm');
-         regBlock.classList.add('validRegLogForm');
+         loadingBlock.classList.replace('active_loading_block', 'inactive_loading_block');
+         regBlock.classList.replace('invalidRegLogForm', 'validRegLogForm');
+         regBlock.classList.add('auth_active');
 
          registrationForm.reset();
          answerBlock.innerHTML = errorText;
@@ -137,10 +133,8 @@
 
          answerBlock.innerHTML = '';
 
-         loadingBlock.classList.remove('active_loading_block');
-         loadingBlock.classList.add('inactive_loading_block');
-         loginBlock.classList.remove('invalidRegLogForm');
-         loginBlock.classList.add('validRegLogForm');
+         loadingBlock.classList.replace('active_loading_block', 'inactive_loading_block');
+         loginBlock.classList.replace('invalidRegLogForm', 'validRegLogForm');
 
          loginForm.reset();
          answerBlock.innerHTML = errorText;
@@ -225,7 +219,7 @@
              );
              if (sendingData.ok) {
                  const data = await sendingData.json();
-                 this.statusLogInController(sendingData.status,data.redirectUrl);
+                 this.statusLogInController(sendingData.status, data.redirectUrl);
              } else {
                  this.statusLogInController(sendingData.status);
              }
@@ -310,8 +304,6 @@
      };
  }
 
-
-
 //----------------Class with functions for front_mainpage.js --> mainpage.html------------------------------------------------------
 class mainPageFunctionsHandler{
 
@@ -342,6 +334,120 @@ class mainPageFunctionsHandler{
 class indexFunctionsHandler {
 
 }
+//----------------Class with functions for reset_password.js --> reset_password.html------------------------------------------------------
+class resetPasswordFunctionsHandler {
+    //-------------------- Function for Sending Code ---------------------------------------
+    sendCode = async (obj) => {
+        if (!obj) {
+            return console.log(`Send Code Function dont get the code`);
+        }
+        try {
+            const sendingCode = await fetch(
+                'http://localhost:3500/api/resetPassword/OpenEnterPage/checkVerificationCode',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(obj),
+                },
+            );
+            const answerBlock = document.querySelector('.block_for_answer_01');
+            if (sendingCode.status == 200) {
+                const codeForm = document.querySelector('.block_for_swiping');
+                const passwordForm = document.querySelector(
+                    '.block_for_swipng_02',
+                );
+                const updatedBtn = document.getElementById('changePasswordBtn');
 
+                codeForm.classList.add('swiping_hidden');
+                passwordForm.classList.replace(
+                    'swiping_hidden',
+                    'swiping_visible',
+                );
+                updatedBtn.classList.replace(
+                    'toLoginBtn_hidden',
+                    'toLoginBtn_visible',
+                );
+            } else if (sendingCode.status == 410) {
+                answerBlock.innerHTML = `<span>Reset code expired — no worries, get a new one</span>`;
+            } else {
+                let time = 30;
+                const countdown = setInterval(() => {
+                    answerBlock.innerHTML = `<span style="color:rgb(126, 1, 1);">Incorrect code</span> entered, please try again <span class = "time_with_words">in <span style="color:rgb(3, 64, 105)"; class = "timer"></span>s.</span>`;
+                    const timerElement = document.querySelector('.timer');
+                    time--;
+                    timerElement.textContent = time;
+
+                    if (time <= 0) {
+                        clearInterval(countdown);
+                        const timeWords = (document.querySelector(
+                            '.time_with_words',
+                        ).textContent = '');
+                    }
+                }, 1000);
+
+                const sendCodeBtn = document.getElementById('sendCodeFormBtn');
+                sendCodeBtn.style.backgroundColor = '#6e8ffbc5';
+                sendCodeBtn.disabled = true;
+                sendCodeBtn.style.pointerEvents = 'none';
+                setTimeout(() => {
+                    sendCodeBtn.disabled = false;
+                    sendCodeBtn.style.pointerEvents = 'auto';
+                    sendCodeBtn.style.backgroundColor = '#6e8efb';
+                }, 30000);
+
+                return;
+            }
+        } catch (err) {
+            console.log(`Internal sevrver error`);
+            throw new Error(`Problem with server: ${err.statusText}`);
+        }
+    };
+
+    //-------------------- Function for Sending Password ---------------------------------------
+    sendPassword = async (obj) => {
+        if (!obj) return console.log(`Password is required`);
+        try {
+            const sendingPassword = await fetch(
+                'http://localhost:3500/api/resetPassword/OpenEnterPage/creatingNewPassword',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(obj),
+                },
+            );
+            if (!sendingPassword.ok) {
+                console.log(`Password was NOT updated`);
+                disableLoginBtn();
+                return;
+            }
+            console.log(`Password was updated`);
+            return;
+        } catch (err) {
+            console.log(`Internal sevrver error`);
+            throw new Error(`Problem with server: ${err.statusText}`);
+        }
+    };
+    //-------------------- Function for Sending Reset Code to Delete ---------------------------------------
+    sendDeletingResedCode = async (code) => {
+       const sendingCode = await fetch('http://localhost:3500/api/resetPassword/OpenEnterPage/deleteResetCode', {
+        method: 'POST', 
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({resetCode: code})
+       })
+       const data = await sendingCode.json();
+       if (data.redirectTo) {
+        console.log(`url: ${data.redirectTo}`);
+           return window.location.href = data.redirectTo;
+       }
+    };
+    
+
+}
 //--------------Export classes in another files-----------------------------------
-export { authFunctionsHandler, mainPageFunctionsHandler, indexFunctionsHandler };
+export { authFunctionsHandler, mainPageFunctionsHandler, indexFunctionsHandler, resetPasswordFunctionsHandler };

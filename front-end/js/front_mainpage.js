@@ -38,77 +38,77 @@ logOutBtn.addEventListener('click', async (event) => {
 
 
 
-const searchInput = document.getElementById("searchInput");
-const suggestionsList = document.createElement("ul");
-suggestionsList.id = "suggestionsList";
-document.querySelector(".search-bar").appendChild(suggestionsList);
-// БРО Я ТУТ ВСЕ ПОПІДПИСУЮ ЩОБ НЕ ПЛУТАТИСЬ 
+// const searchInput = document.getElementById("searchInput");
+// const suggestionsList = document.createElement("ul");
+// suggestionsList.id = "suggestionsList";
+// document.querySelector(".search-bar").appendChild(suggestionsList);
+// // БРО Я ТУТ ВСЕ ПОПІДПИСУЮ ЩОБ НЕ ПЛУТАТИСЬ 
 
 
 
-let lastRequestTime = 0; // Час останнього запиту
+// let lastRequestTime = 0; // Час останнього запиту
 
-// Спочатку ховаємо список
-suggestionsList.style.display = "none"; 
+// // Спочатку ховаємо список
+// suggestionsList.style.display = "none"; 
 
-searchInput.addEventListener("input", async (e) => {
-    const query = e.target.value.trim();
+// searchInput.addEventListener("input", async (e) => {
+//     const query = e.target.value.trim();
     
-    // Показуємо список лише якщо введено хоча б 2 символи
-    if (query.length < 2) {
-        suggestionsList.innerHTML = "";  // Очистка списку
-        suggestionsList.style.display = "none"; // Сховати список
-        return;
-    }
+//     // Показуємо список лише якщо введено хоча б 2 символи
+//     if (query.length < 2) {
+//         suggestionsList.innerHTML = "";  // Очистка списку
+//         suggestionsList.style.display = "none"; // Сховати список
+//         return;
+//     }
 
-    const currentTime = Date.now();
-    if (currentTime - lastRequestTime < 1000) { 
-        return; // Чекаємо 1 секунду перед новим запитом
-    }
-    lastRequestTime = currentTime;
+//     const currentTime = Date.now();
+//     if (currentTime - lastRequestTime < 1000) { 
+//         return; // Чекаємо 1 секунду перед новим запитом
+//     }
+//     lastRequestTime = currentTime;
 
-    const results = await searchCity(query);
-    showSuggestions(results);
-});
-async function searchCity(query) {
-    const url = `https://nominatim.openstreetmap.org/search?q=${query}&format=json&addressdetails=1&laccept-language=uk&countrycodes=UA`;
-    try {
-        const response = await fetch(url, {
-            headers: {
-                "User-Agent": "TopSpotsSearch/1.0 (contact@topspots.com)",
-            }
-        });
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error("Помилка запиту:", error);
-        return [];
-    }
-}
+//     const results = await searchCity(query);
+//     showSuggestions(results);
+// });
+// async function searchCity(query) {
+//     const url = `https://nominatim.openstreetmap.org/search?q=${query}&format=json&addressdetails=1&laccept-language=uk&countrycodes=UA`;
+//     try {
+//         const response = await fetch(url, {
+//             headers: {
+//                 "User-Agent": "TopSpotsSearch/1.0 (contact@topspots.com)",
+//             }
+//         });
+//         const data = await response.json();
+//         return data;
+//     } catch (error) {
+//         console.error("Помилка запиту:", error);
+//         return [];
+//     }
+// }
 
-function showSuggestions(results) {
-    suggestionsList.innerHTML = ""; // Очистка перед новими даними
+// function showSuggestions(results) {
+//     suggestionsList.innerHTML = ""; // Очистка перед новими даними
 
-    // Якщо нічого не знайдено
-    if (results.length === 0) {
-        suggestionsList.innerHTML = "<li class='no-results'>Нічого не знайдено</li>";
-    } else {
-        results.forEach(result => {
-            const li = document.createElement("li");
-            li.textContent = result.display_name; // Назва місця
-            li.addEventListener("click", () => selectSuggestion(result)); // Вибір місця
-            suggestionsList.appendChild(li);
-        });
-    }
+//     // Якщо нічого не знайдено
+//     if (results.length === 0) {
+//         suggestionsList.innerHTML = "<li class='no-results'>Нічого не знайдено</li>";
+//     } else {
+//         results.forEach(result => {
+//             const li = document.createElement("li");
+//             li.textContent = result.display_name; // Назва місця
+//             li.addEventListener("click", () => selectSuggestion(result)); // Вибір місця
+//             suggestionsList.appendChild(li);
+//         });
+//     }
 
-    // Показуємо список після заповнення результатами
-    suggestionsList.style.display = "block"; 
-    suggestionsList.classList.add("show"); // Додаємо клас для анімації
-}
+//     // Показуємо список після заповнення результатами
+//     suggestionsList.style.display = "block"; 
+//     suggestionsList.classList.add("show"); // Додаємо клас для анімації
+// }
 
-function selectSuggestion(result) {
-    searchInput.value = result.display_name; // Вставляємо вибране місце
-    suggestionsList.innerHTML = ""; // Ховаємо випадаючий список
-    suggestionsList.style.display = "none"; // Сховати список після вибору
-    suggestionsList.classList.remove("show"); // Прибираємо клас анімації
-}
+// function selectSuggestion(result) {
+//     searchInput.value = result.display_name; // Вставляємо вибране місце
+//     suggestionsList.innerHTML = ""; // Ховаємо випадаючий список
+//     suggestionsList.style.display = "none"; // Сховати список після вибору
+//     suggestionsList.classList.remove("show"); // Прибираємо клас анімації
+// }

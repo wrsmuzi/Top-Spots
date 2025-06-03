@@ -336,6 +336,7 @@ class indexFunctionsHandler {
 }
 //----------------Class with functions for reset_password.js --> reset_password.html------------------------------------------------------
 class resetPasswordFunctionsHandler {
+    
     //-------------------- Function for Sending Code ---------------------------------------
     sendCode = async (obj) => {
         if (!obj) {

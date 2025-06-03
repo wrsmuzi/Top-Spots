@@ -987,10 +987,13 @@ class Controller {
     };
     
  
-async getCityInfo(req, res) {
+ async function getCityInfo(req, res) {
   try {
     const city = req.query.city;
     if (!city) return res.status(400).json({ error: 'City is required' });
+    
+
+
 
     // Основна інформація про місто
     const cityQuery = `
@@ -1040,7 +1043,7 @@ async getCityInfo(req, res) {
   }
 }
 
-async addReview(req, res) {
+ addReview(req, res) {
   try {
     const { city, user_name, rating, comment } = req.body;
     if (!city || !user_name || !rating || !comment) {

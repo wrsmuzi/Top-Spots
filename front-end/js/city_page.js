@@ -1,104 +1,117 @@
-document.addEventListener("DOMContentLoaded", async () => {
-    const cityName = getCityFromUrl();
+const cityInput = document.getElementById('city-input');
+const searchBtn = document.getElementById('search-btn');
+const cityNameElem = document.getElementById('city-name');
+const cityDescElem = document.getElementById('city-description');
+const cityRatingElem = document.getElementById('city-rating');
+const cityPopulationElem = document.getElementById('city-population');
+const placesListElem = document.getElementById('places-list');
+const reviewsListElem = document.getElementById('reviews-list');
+const reviewForm = document.getElementById('review-form');
+const mapContainer = document.getElementById('map');
 
-    if (!cityName) {
-        showError("Місто не вказане в URL.");
-        return;
+let map;
+let markers = [];
+
+function initMap(lat, lon) {
+  if (map) {
+    map.setView([lat, lon], 13);
+    markers.forEach(m => map.removeLayer(m));
+    markers = [];
+  } else {
+    map = L.map('map').setView([lat, lon], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+    }).addTo(map);
+  }
+}
+
+function addMarker(lat, lon, popupText) {
+  const marker = L.marker([lat, lon]).addTo(map);
+  if (popupText) marker.bindPopup(popupText);
+  markers.push(marker);
+}
+
+async function fetchCityData(city) {
+  try {
+    const res = await fetch(`/api/city?city=${encodeURIComponent(city)}`);
+    if (!res.ok) throw new Error('City not found');
+    const data = await res.json();
+
+    cityNameElem.textContent = data.city.name;
+    cityDescElem.textContent = data.city.description;
+    cityRatingElem.textContent = `Рейтинг: ${data.city.rating.toFixed(1)} ⭐`;
+    cityPopulationElem.textContent = `Населення: ${data.city.population}`;
+
+    placesListElem.innerHTML = '';
+    data.places.forEach(place => {
+      const li = document.createElement('li');
+      li.textContent = `${place.name} (${place.category}) — ${place.address}`;
+      placesListElem.appendChild(li);
+      addMarker(place.lat, place.lon, place.name);
+    });
+
+    if (data.places.length > 0) {
+      reviewForm.style.display = 'block';
+      reviewsListElem.style.display = 'block';
+    } else {
+      reviewForm.style.display = 'none';
+      reviewsListElem.style.display = 'none';
     }
 
-    const cityData = await fetchCityData(cityName);
+    reviewsListElem.innerHTML = '';
+    data.reviews.forEach(r => {
+      const div = document.createElement('div');
+      div.className = 'review';
+      div.innerHTML = `
+        <strong>${r.user_name}</strong> — рейтинг: ${r.rating} ⭐<br>
+        <em>${new Date(r.created_at).toLocaleDateString()}</em><br>
+        <p>${r.comment}</p>
+      `;
+      reviewsListElem.appendChild(div);
+    });
 
-    if (!cityData) {
-        showError("Не вдалося знайти інформацію про місто.");
-        return;
+    // Ініціалізувати карту, центрована на перше круте місце або місто (приблизні координати)
+    if (data.places.length > 0) {
+      initMap(data.places[0].lat, data.places[0].lon);
+    } else {
+      // Якщо крутих місць немає, ставимо центр на координати міста (тут треба заздалегідь знати)
+      initMap(50.45, 30.52); // Київ як дефолт
     }
 
-    displayCityData(cityData);
+  } catch (error) {
+    alert(error.message);
+  }
+}
+
+searchBtn.addEventListener('click', () => {
+  const city = cityInput.value.trim();
+  if (city) fetchCityData(city);
 });
 
-// Отримати місто з параметра в URL
-function getCityFromUrl() {
-    const params = new URLSearchParams(window.location.search);
-    return params.get("city");
-}
-
-// Отримати інформацію про місто через Nominatim API
-async function fetchCityData(city) {
-    const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${city}&addressdetails=1&accept-language=uk&countrycodes=UA`;
-
-    try {
-        const response = await fetch(url, {
-            headers: {
-                "User-Agent": "TopSpotsCityPage/1.0 (contact@topspots.com)"
-            }
-        });
-
-        const data = await response.json();
-        return data.length > 0 ? data[0] : null;
-
-    } catch (error) {
-        console.error("Помилка при завантаженні даних міста:", error);
-        return null;
+reviewForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const formData = new FormData(reviewForm);
+  const payload = {
+    city: cityInput.value.trim(),
+    user_name: formData.get('user_name'),
+    rating: Number(formData.get('rating')),
+    comment: formData.get('comment')
+  };
+  try {
+    const res = await fetch('/api/city/review', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (data.success) {
+      alert('Відгук додано');
+      reviewForm.reset();
+      fetchCityData(cityInput.value.trim());
+    } else {
+      alert('Помилка додавання відгуку');
     }
-}
-
-// Вивід даних на сторінку
-function displayCityData(data) {
-    const name = data.display_name || "Без назви";
-    const lat = data.lat;
-    const lon = data.lon;
-    const type = data.type || "місцевість";
-    const details = data.address;
-
-    // Назва міста
-    document.getElementById("cityName").textContent =
-        details.city || details.town || details.village || details.county || name;
-
-    // Опис (примітивний на основі address)
-    const description = `
-        ${type === "city" ? "Місто" : "Місцевість"} в Україні, розташована в 
-        ${details.region || details.state || "невідомому регіоні"}.
-    `;
-    document.getElementById("cityDescription").textContent = description;
-
-    // Координати
-    document.getElementById("coordinates").textContent = `Координати: ${lat}, ${lon}`;
-
-    // Фото з Wikimedia (опційно)
-    fetchCityPhoto(name);
-}
-
-// Показати повідомлення про помилку
-function showError(message) {
-    document.getElementById("cityName").textContent = "Помилка";
-    document.getElementById("cityDescription").textContent = message;
-    document.getElementById("coordinates").textContent = "";
-}
-
-// Підвантаження фото з Wikimedia
-async function fetchCityPhoto(query) {
-    const url = `https://commons.wikimedia.org/w/api.php?action=query&origin=*&format=json&prop=pageimages&piprop=original&titles=${encodeURIComponent(query)}`;
-    try {
-        const res = await fetch(url);
-        const data = await res.json();
-
-        const pages = data.query.pages;
-        const firstPage = Object.values(pages)[0];
-
-        if (firstPage.original && firstPage.original.source) {
-            document.getElementById("cityImage").src = firstPage.original.source;
-            document.getElementById("cityImage").alt = query;
-        } else {
-            showNoImage();
-        }
-    } catch (err) {
-        console.error("Не вдалося завантажити фото:", err);
-        showNoImage();
-    }
-}
-
-function showNoImage() {
-    const img = document.getElementById("cityImage");
-    img.src = "https://via.placeholder.com/600x400?text=Немає+фото";
-    img.alt = "Фото недоступне";
-}
+  } catch {
+    alert('Помилка сервера');
+  }
+});

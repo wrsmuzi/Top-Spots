@@ -31,39 +31,38 @@ router.post('/api/resetPassword/OpenEnterPage/deleteResetCode', controller.delet
 
 router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 router.get('/auth/google/callback', controller.getGoogleDataAuth);
+router.get('/api/city', getCityInfo);
+router.post('/api/city/review', addReview);
 
+ http: router.get('/auth/google', (req, res, next) => {
+    console.log('➡️ Запит на /auth/google отримано');
 
-// http: router.get('/auth/google', (req, res, next) => {
-//     console.log('➡️ Запит на /auth/google отримано');
+    const middleware = passport.authenticate('google', {
+        scope: ['profile', 'email'],     });
 
-//     const middleware = passport.authenticate('google', {
-//         scope: ['profile', 'email'],
-//     });
+     console.log('⚡️ Викликаємо passport.authenticate...');
 
-//     console.log('⚡ Викликаємо passport.authenticate...');
+    return middleware(req, res, next);
+ });
 
-//     return middleware(req, res, next);
-// });
+ router.get('/auth/google/callback', 
+    (req, res, next) => {
+         console.log('🔄 Отримано запит на /auth/google/callback');
+         next();
+     }, 
+     passport.authenticate('google', { failureRedirect: '/' }), 
+   (req, res) => {
+        console.log('✅ Google OAuth успішний!');
+        console.log('👤 Користувач:', req.user);
+        res.redirect('/profile');
+     } );
 
-// router.get('/auth/google/callback', 
-//     (req, res, next) => {
-//         console.log('🔄 Отримано запит на /auth/google/callback');
-//         next();
-//     }, 
-//     passport.authenticate('google', { failureRedirect: '/' }), 
-//     (req, res) => {
-//         console.log('✅ Google OAuth успішний!');
-//         console.log('👤 Користувач:', req.user);
-//         res.redirect('/profile');
-//     }
-// );
-
-// router.get('/profile', (req, res) => {
-//     if (!req.user) {
-//         return res.redirect('/auth/google');
-//     }
-//     res.json(req.user);
-// });
+ router.get('/profile', (req, res) => {
+     if (!req.user) {
+         return res.redirect('/auth/google');
+     }
+     res.json(req.user);
+ });
 
 router.use('*', controller.openErrorPage);
 

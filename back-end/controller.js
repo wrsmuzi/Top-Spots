@@ -985,6 +985,88 @@ class Controller {
             };
         })(req, res, next);
     };
+    
+ 
+async getCityInfo(req, res) {
+  try {
+    const city = req.query.city;
+    if (!city) return res.status(400).json({ error: 'City is required' });
+
+    // Основна інформація про місто
+    const cityQuery = `
+      SELECT name, description, rating, population
+      FROM cities
+      WHERE LOWER(name) = LOWER($1)
+      LIMIT 1
+    `;
+    const cityResult = await pool.query(cityQuery, [city]);
+    if (cityResult.rows.length === 0) {
+      return res.status(404).json({ error: 'City not found' });
+    }
+    const cityInfo = cityResult.rows[0];
+
+    // Круті місця поряд
+    const placesQuery = `
+      SELECT id, name, category, address, lat, lon
+      FROM places
+      WHERE city_id = (SELECT id FROM cities WHERE LOWER(name) = LOWER($1))
+        AND category IN ('кафе', 'готель', 'торговий центр', 'історичне місце')
+      LIMIT 5
+    `;
+    const placesResult = await pool.query(placesQuery, [city]);
+
+    // Відгуки про місто 
+    let reviews = [];
+    if (placesResult.rows.length > 0) {
+      const reviewsQuery = `
+        SELECT id, user_name, rating, comment, created_at
+        FROM reviews
+        WHERE city_id = (SELECT id FROM cities WHERE LOWER(name) = LOWER($1))
+        ORDER BY created_at DESC
+        LIMIT 10
+      `;
+      const reviewsResult = await pool.query(reviewsQuery, [city]);
+      reviews = reviewsResult.rows;
+    }
+
+    res.json({
+      city: cityInfo,
+      places: placesResult.rows,
+      reviews,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+}
+
+async addReview(req, res) {
+  try {
+    const { city, user_name, rating, comment } = req.body;
+    if (!city || !user_name || !rating || !comment) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+
+    const cityCheck = await pool.query('SELECT id FROM cities WHERE LOWER(name) = LOWER($1)', [city]);
+    if (cityCheck.rows.length === 0) return res.status(404).json({ error: 'City not found' });
+    const cityId = cityCheck.rows[0].id;
+
+    // Додати відгук
+    const insertQuery = `
+      INSERT INTO reviews(city_id, user_name, rating, comment, created_at)
+      VALUES ($1, $2, $3, $4, NOW())
+      RETURNING id
+    `;
+    const insertResult = await pool.query(insertQuery, [cityId, user_name, rating, comment]);
+    res.json({ success: true, reviewId: insertResult.rows[0].id });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+}
+
+
 }
 
 module.exports = Controller;

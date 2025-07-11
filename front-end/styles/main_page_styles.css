@@ -250,14 +250,6 @@ svg {
   color: rgba(0, 0, 0, 1);
 }
 
-.main_categories {
-  background-color: rgba(255, 255, 255, 0.361);
-  height: 50px;
-  width: 90%;
-  margin-top: 40px;
-  z-index: 1;
-  align-self: flex-start;
-}
 
 .main-categories__title {}
 
@@ -314,10 +306,11 @@ svg {
   padding: 15px;
 }
 .main_categories {
+
   display: flex;
   justify-content: center;
   gap: 30px;
-  padding: 50px;
+  padding: 20px;
   flex-wrap: wrap;
   z-index: 2;
 }
